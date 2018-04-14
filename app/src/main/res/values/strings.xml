@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">gallery</string>
+
+    <string name="empty"> </string>
+    <string name="home">首页</string>
+    <string name="record">历史记录</string>
+    <string name="my">我的</string>
+    
+    <string name="leader_board">点击榜</string>
+    <string name="like">猜你喜欢</string>
+</resources>
