@@ -51,7 +51,6 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
     }
 
     protected abstract void getData();
-    protected abstract @LayoutRes
-    int getLayoutId();
+    protected abstract @LayoutRes int getLayoutId();
     protected abstract void initView(View convertView);
 }

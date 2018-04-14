@@ -1,5 +1,6 @@
 *.iml
-.gradle
+.gradl
+/gradlee
 /local.properties
 /.idea
 .DS_Store

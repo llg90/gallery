@@ -9,7 +9,18 @@
         android:background="@color/white"
         android:orientation="vertical">
 
-        <include layout="@layout/fragment_host_circle"/>
+        <!--<include layout="@layout/fragment_host_circle"/>-->
+        <com.youth.banner.Banner
+            xmlns:banner="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/banner_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            banner:image_scale_type="center_inside"
+            banner:indicator_height="8dp"
+            banner:indicator_width="8dp"
+            banner:is_auto_play="true"
+            banner:delay_time="2000"
+            android:background="@color/gray_d"/>
 
         <View
             android:layout_width="match_parent"

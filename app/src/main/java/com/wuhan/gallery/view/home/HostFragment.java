@@ -3,23 +3,19 @@ package com.wuhan.gallery.view.home;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.viewpagerindicator.CirclePageIndicator;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
 import com.wuhan.gallery.view.comm.ImageDetailsActivity;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +27,7 @@ public class HostFragment extends BaseLazyLoadFragment {
     private List<String> mLikeListData = new ArrayList<>();
     private HostImageAdapter mLikeListAdapter;
 
-    private static int mCirclePosition;
-    private Runnable mCircleRunnable;
-    private ViewPager mCircleViewPager;
-    private List<ImageView> mImageViews = new ArrayList<>();
+    private Banner mBanner;
     private List<String> mCircleImageUrlData = new ArrayList<>();
 
     @Override
@@ -61,7 +54,8 @@ public class HostFragment extends BaseLazyLoadFragment {
 
         mLeaderBoardAdapter.notifyDataSetChanged();
         mLikeListAdapter.notifyDataSetChanged();
-        mCircleViewPager.getAdapter().notifyDataSetChanged();
+        mBanner.setImages(mCircleImageUrlData);
+        mBanner.start();
     }
 
     @Override
@@ -114,59 +108,14 @@ public class HostFragment extends BaseLazyLoadFragment {
         });
         likeListView.setAdapter(mLikeListAdapter);
 
-        initCircleView(convertView);
+        mBanner = convertView.findViewById(R.id.banner_view);
+        mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
+        mBanner.setIndicatorGravity(BannerConfig.RIGHT);
+        mBanner.setImageLoader(new GlideImageLoader());
+        mBanner.setBannerAnimation(Transformer.Stack);
+
     }
 
-    private void initCircleView(View contentViw) {
-        mCircleViewPager = contentViw.findViewById(R.id.circle_view_pager);
-        CirclePageIndicator circlePageIndicator = contentViw.findViewById(R.id.circle_pager_indicator);
 
-        mCircleViewPager.setAdapter(new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return mCircleImageUrlData.size();
-            }
 
-            @NonNull
-            @Override
-            public ImageView instantiateItem(@NonNull ViewGroup container, int position) {
-                ImageView imageView = new ImageView(container.getContext());
-                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                mImageViews.add(imageView);
-                Glide.with(HostFragment.this).load(mCircleImageUrlData.get(position)).into(imageView);
-                container.addView(imageView);
-                return imageView;
-            }
-
-            @Override
-            public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-                container.removeView((View) object);
-            }
-
-            @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-                return view == object;
-            }
-        });
-
-        circlePageIndicator.setViewPager(mCircleViewPager);
-
-        if (mCircleRunnable == null) {
-            mCircleRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    mCirclePosition++;
-                    mCircleViewPager.setCurrentItem(mCirclePosition%mCircleImageUrlData.size());
-                    mCircleViewPager.postDelayed(this, 2*1000);
-                }
-            };
-            mCircleViewPager.postDelayed(mCircleRunnable, 2*1000);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        mCircleViewPager.removeCallbacks(mCircleRunnable);
-        super.onDestroy();
-    }
 }
