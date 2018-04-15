@@ -39,6 +39,8 @@ public class MainActivity extends BaseFragmentActivity {
                 fragmentTransaction.hide(mSelectedFragment);
                 fragmentTransaction.show(mFragments[position]);
                 fragmentTransaction.commit();
+                mSelectedFragment.setUserVisibleHint(false);
+                mFragments[position].setUserVisibleHint(true);
                 mSelectedFragment = mFragments[position];
             }
         });

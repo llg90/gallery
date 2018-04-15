@@ -39,7 +39,7 @@ public class ImageDetailsActivity extends BaseActivity {
         }
 
         ViewPager viewPager = findViewById(R.id.view_pager);
-        CirclePageIndicator indicator = findViewById(R.id.indicator);
+//        CirclePageIndicator indicator = findViewById(R.id.indicator);
 
         viewPager.setAdapter(new PagerAdapter() {
             @Override
@@ -82,12 +82,12 @@ public class ImageDetailsActivity extends BaseActivity {
             }
         });
 
-        if (mUrls.isEmpty() || mUrls.size() == 1) {
+/*        if (mUrls.isEmpty() || mUrls.size() == 1) {
             indicator.setVisibility(View.GONE);
         } else {
             indicator.setVisibility(View.VISIBLE);
             indicator.setViewPager(viewPager);
-        }
+        }*/
         viewPager.setCurrentItem(mPosition);
     }
 }

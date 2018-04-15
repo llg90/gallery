@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:transitionName="image"/>
 
-    <com.viewpagerindicator.CirclePageIndicator
+<!--    <com.viewpagerindicator.CirclePageIndicator
         xmlns:cpi="http://schemas.android.com/apk/res-auto"
         android:id="@+id/indicator"
         android:layout_width="match_parent"
@@ -20,6 +20,82 @@
         cpi:radius="5dp"
         cpi:fillColor="@color/white"
         cpi:pageColor="@color/gray"
-        cpi:strokeWidth="0dp"/>
+        cpi:strokeWidth="0dp"/>-->
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/likes_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/likes_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:text="@string/likes_text"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="40dp"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/collect_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/collect_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:text="@string/collect_text"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginStart="40dp"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/share_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/share_selector"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:text="@string/share_text"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 </FrameLayout>

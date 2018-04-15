@@ -8,4 +8,8 @@
     
     <string name="leader_board">点击榜</string>
     <string name="like">猜你喜欢</string>
+
+    <string name="likes_text">点赞</string>
+    <string name="collect_text">收藏</string>
+    <string name="share_text">分享</string>
 </resources>

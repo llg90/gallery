@@ -25,7 +25,7 @@ public class HomeFragment extends BaseLazyLoadFragment {
     private TabLayout mTabLayoutView;
     private ViewPager mContentPagerView;
 
-    private String[] mTabTexts = new String[] {"首页","明星", "风景","动漫","剧照", "测试" };
+    private String[] mTabTexts = new String[] {"首页","明星", "风景","动漫","剧照" };
     private List<BaseLazyLoadFragment> mFragments = new ArrayList<>();
 
     private final static List<ArrayList<String>> mImageUrls = new ArrayList<>();

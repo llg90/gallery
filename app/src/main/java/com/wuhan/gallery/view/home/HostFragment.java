@@ -16,6 +16,7 @@ import com.wuhan.gallery.view.comm.ImageDetailsActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +114,18 @@ public class HostFragment extends BaseLazyLoadFragment {
         mBanner.setIndicatorGravity(BannerConfig.RIGHT);
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setBannerAnimation(Transformer.Stack);
+        mBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
+                ArrayList<String> urls = new ArrayList<>();
+                urls.add(mCircleImageUrlData.get(position));
+                intent.putStringArrayListExtra("urls", urls);
+                ActivityOptionsCompat activityOptionsCompat =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create((View)mBanner, "image"));
+                startActivity(intent, activityOptionsCompat.toBundle());
+            }
+        });
 
     }
 
