@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.comm.ImageDetailsActivity"/>
+        <activity android:name=".view.my.login.LoginActivity"/>
     </application>
 
 </manifest>

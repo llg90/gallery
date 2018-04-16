@@ -1,5 +1,6 @@
 package com.wuhan.gallery.view.my;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -9,6 +10,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
+import com.wuhan.gallery.view.my.login.LoginActivity;
 
 /**
  * @author: 李利刚
@@ -46,5 +48,16 @@ public class MyFragment extends BaseLazyLoadFragment {
         mUserBackgroundImageView = convertView.findViewById(R.id.user_background_image_view);
         mUserIconImageView = convertView.findViewById(R.id.user_icon_image);
         mUserNameTextView  = convertView.findViewById(R.id.user_name_text);
+
+        initListener();
+    }
+
+    private void initListener() {
+        mUserIconImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), LoginActivity.class));
+            }
+        });
     }
 }

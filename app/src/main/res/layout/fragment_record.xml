@@ -2,11 +2,46 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="this is Record"/>
+        android:padding="10dp"
+        android:background="@color/record_bar"
+        android:text="@string/record"
+        android:textSize="16sp"
+        android:textColor="@color/white"/>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        xmlns:srl="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray"
+        srl:srlAccentColor="@color/white"
+        srl:srlPrimaryColor="@color/gray"
+        srl:srlEnableRefresh="true"
+        srl:srlEnableLoadMore="true"
+        srl:srlEnableAutoLoadMore="true"
+        srl:srlEnablePreviewInEditMode="true">
+
+        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/image_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"/>
+
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            srl:srlAccentColor="@color/white"/>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
