@@ -3,6 +3,7 @@ package com.wuhan.gallery.view.my;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -10,6 +11,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
+import com.wuhan.gallery.view.my.info.UserInfoActivity;
 import com.wuhan.gallery.view.my.login.LoginActivity;
 
 /**
@@ -22,6 +24,7 @@ public class MyFragment extends BaseLazyLoadFragment {
     private ImageView mUserBackgroundImageView;
     private ImageView mUserIconImageView;
     private TextView  mUserNameTextView;
+    private LinearLayout mSetButton;
 
     @Override
     protected void getData() {
@@ -48,7 +51,7 @@ public class MyFragment extends BaseLazyLoadFragment {
         mUserBackgroundImageView = convertView.findViewById(R.id.user_background_image_view);
         mUserIconImageView = convertView.findViewById(R.id.user_icon_image);
         mUserNameTextView  = convertView.findViewById(R.id.user_name_text);
-
+        mSetButton = convertView.findViewById(R.id.set_button);
         initListener();
     }
 
@@ -56,7 +59,14 @@ public class MyFragment extends BaseLazyLoadFragment {
         mUserIconImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), LoginActivity.class));
+                startActivity(new Intent(getContext(), UserInfoActivity.class));
+            }
+        });
+
+        mSetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), SetActivity.class));
             }
         });
     }

@@ -26,6 +26,9 @@
         <activity android:name=".view.comm.ImageDetailsActivity"/>
         <activity android:name=".view.my.login.LoginActivity"/>
         <activity android:name=".view.my.login.RegisterActivity"/>
+        <activity android:name=".view.my.SetActivity"/>
+        <activity android:name=".view.my.info.UserInfoActivity"/>
+        <activity android:name=".view.my.info.ModifyInfoItemActivity"/>
     </application>
 
 </manifest>

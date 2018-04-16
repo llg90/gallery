@@ -13,4 +13,7 @@
     <color name="home_bar">#5D4037</color>
     <color name="record_bar">#244C9D</color>
     <color name="my_bar">#36881B</color>
+
+    <color name="logout_button_p">#ddf99898</color>
+    <color name="logout_button_n">#ddf44c4c</color>
 </resources>
