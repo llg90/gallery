@@ -3,10 +3,20 @@ package com.wuhan.gallery.view.my.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseActivity;
+import com.wuhan.gallery.bean.NetworkDataBean;
+import com.wuhan.gallery.bean.UserBean;
+import com.wuhan.gallery.net.SimplifyObserver;
+import com.wuhan.gallery.net.SingletonNetServer;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivity extends BaseActivity {
 

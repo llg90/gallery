@@ -19,7 +19,7 @@ import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseActivity;
 import com.wuhan.gallery.view.comm.GlideEngine;
 import com.wuhan.gallery.view.my.login.ModifyPasswordActivity;
-import com.wuhan.gallery.view.net.SimplifyObserver;
+import com.wuhan.gallery.net.SimplifyObserver;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;

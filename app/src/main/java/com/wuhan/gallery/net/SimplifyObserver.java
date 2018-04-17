@@ -1,4 +1,4 @@
-package com.wuhan.gallery.view.net;
+package com.wuhan.gallery.net;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;

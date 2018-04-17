@@ -11,8 +11,16 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
+import com.wuhan.gallery.bean.NetworkDataBean;
+import com.wuhan.gallery.bean.UserBean;
+import com.wuhan.gallery.net.SingletonNetServer;
 import com.wuhan.gallery.view.my.info.UserInfoActivity;
 import com.wuhan.gallery.view.my.login.LoginActivity;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author: 李利刚
@@ -33,12 +41,46 @@ public class MyFragment extends BaseLazyLoadFragment {
         Glide.with(this).load(backgroundUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(mUserBackgroundImageView);
+
         Glide.with(this)
-                .applyDefaultRequestOptions(new RequestOptions().circleCrop())
                 .load(iconUrl)
+                .apply(new RequestOptions().circleCrop())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(mUserIconImageView);
         mUserNameTextView.setText("测试用户");
+
+        SingletonNetServer.INSTANCE.getUserServer().login("test", "123456")
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<NetworkDataBean<UserBean>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(NetworkDataBean<UserBean> userBeanNetworkDataBean) {
+                        UserBean data = userBeanNetworkDataBean.getData();
+                        mUserNameTextView.setText(data.getName());
+                        Glide.with(MyFragment.this)
+                                .load(data.getIconUrl())
+                                .apply(new RequestOptions().circleCrop())
+                                .into(mUserIconImageView);
+
+                        Glide.with(MyFragment.this)
+                                .load(data.getbUrl())
+                                .into(mUserBackgroundImageView);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
@@ -59,7 +101,7 @@ public class MyFragment extends BaseLazyLoadFragment {
         mUserIconImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), UserInfoActivity.class));
+                startActivity(new Intent(getContext(), LoginActivity.class));
             }
         });
 
