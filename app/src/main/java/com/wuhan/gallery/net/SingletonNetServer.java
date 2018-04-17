@@ -9,6 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public enum SingletonNetServer {
     INSTANCE;
 
+    public static final String sIMAGE_SERVER_HOST = "http://192.168.1.125:5000/images/";
     private UserServer mUserServer;
 
     SingletonNetServer() {
@@ -17,10 +18,10 @@ public enum SingletonNetServer {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://rapapi.org/mockjsdata/33408/")
-                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(okHttpClient)
+                .baseUrl("http://192.168.1.125:5000/")
                 .build();
 
         mUserServer = retrofit.create(UserServer.class);

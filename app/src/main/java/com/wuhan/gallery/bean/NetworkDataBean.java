@@ -1,16 +1,16 @@
 package com.wuhan.gallery.bean;
 
 public class NetworkDataBean<T> {
-    private int code;
+    private String status;
     private T data;
     private String message;
 
-    public int getCode() {
-        return code;
+    public String getStatus() {
+        return status;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public T getData() {
@@ -29,3 +29,5 @@ public class NetworkDataBean<T> {
         this.message = message;
     }
 }
+
+

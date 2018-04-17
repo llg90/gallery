@@ -3,6 +3,8 @@ package com.wuhan.gallery;
 import android.app.Application;
 import android.content.Context;
 
+import com.wuhan.gallery.bean.UserBean;
+
 /**
  * @author: 李利刚
  * @E-mail: lgzc_work@163.com
@@ -10,15 +12,24 @@ import android.content.Context;
  * @describe:
  */
 public class GalleryApplication extends Application {
-    private static Context sContext;
+    private static GalleryApplication sContext;
+    private UserBean mUserBean;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sContext = getApplicationContext();
+        sContext = this;
     }
 
-    public static Context getContext() {
+    public static GalleryApplication getContext() {
         return sContext;
+    }
+
+    public UserBean getUserBean() {
+        return mUserBean;
+    }
+
+    public void setUserBean(UserBean userBean) {
+        mUserBean = userBean;
     }
 }

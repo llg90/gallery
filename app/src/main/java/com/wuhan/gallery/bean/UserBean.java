@@ -1,12 +1,23 @@
 package com.wuhan.gallery.bean;
 
+/*
+"id": 13,
+        "username": "jim",
+        "password": "123456",
+        "email": "317458345@qq.com",
+        "telephone": "13297963867",
+        "icon": "3I9J9C20180416154258.jpg",
+        "createdate": "2018-04-16T07:43:12.000Z",
+        "logindate": "2018-04-16T07:43:12.000Z"
+*/
 public class UserBean {
     private int id;
-    private String name;
-    private String iconUrl;
-    private String bUrl;
+    private String username;
     private String email;
-    private String phone;
+    private String telephone;
+    private String icon;
+    private String createdate;
+    private String logindate;
 
     public int getId() {
         return id;
@@ -16,28 +27,12 @@ public class UserBean {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getIconUrl() {
-        return iconUrl;
-    }
-
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
-
-    public String getbUrl() {
-        return bUrl;
-    }
-
-    public void setbUrl(String bUrl) {
-        this.bUrl = bUrl;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -48,11 +43,35 @@ public class UserBean {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getCreatedate() {
+        return createdate;
+    }
+
+    public void setCreatedate(String createdate) {
+        this.createdate = createdate;
+    }
+
+    public String getLogindate() {
+        return logindate;
+    }
+
+    public void setLogindate(String logindate) {
+        this.logindate = logindate;
     }
 }

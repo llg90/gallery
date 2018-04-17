@@ -9,18 +9,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
-import com.wuhan.gallery.bean.NetworkDataBean;
 import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.net.SingletonNetServer;
 import com.wuhan.gallery.view.my.info.UserInfoActivity;
 import com.wuhan.gallery.view.my.login.LoginActivity;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author: 李利刚
@@ -36,51 +31,36 @@ public class MyFragment extends BaseLazyLoadFragment {
 
     @Override
     protected void getData() {
+
         String backgroundUrl = "http://img.zcool.cn/community/0142135541fe180000019ae9b8cf86.jpg@1280w_1l_2o_100sh.png";
-        String iconUrl = "http://img3.duitang.com/uploads/item/201605/08/20160508154653_AQavc.png";
         Glide.with(this).load(backgroundUrl)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(mUserBackgroundImageView);
+        mUserNameTextView.setText("请登录");
 
-        Glide.with(this)
-                .load(iconUrl)
-                .apply(new RequestOptions().circleCrop())
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(mUserIconImageView);
-        mUserNameTextView.setText("测试用户");
+        UserBean userBean = GalleryApplication.getContext().getUserBean();
+        if (userBean != null) {
+            Glide.with(this).load(backgroundUrl)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(mUserBackgroundImageView);
 
-        SingletonNetServer.INSTANCE.getUserServer().login("test", "123456")
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<NetworkDataBean<UserBean>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Glide.with(this)
+                    .load(SingletonNetServer.sIMAGE_SERVER_HOST+userBean.getIcon())
+                    .apply(new RequestOptions().circleCrop())
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(mUserIconImageView);
 
-                    }
+            mUserNameTextView.setText(userBean.getUsername());
+        }
 
-                    @Override
-                    public void onNext(NetworkDataBean<UserBean> userBeanNetworkDataBean) {
-                        UserBean data = userBeanNetworkDataBean.getData();
-                        mUserNameTextView.setText(data.getName());
-                        Glide.with(MyFragment.this)
-                                .load(data.getIconUrl())
-                                .apply(new RequestOptions().circleCrop())
-                                .into(mUserIconImageView);
+    }
 
-                        Glide.with(MyFragment.this)
-                                .load(data.getbUrl())
-                                .into(mUserBackgroundImageView);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            getData();
+        }
     }
 
     @Override
@@ -101,7 +81,13 @@ public class MyFragment extends BaseLazyLoadFragment {
         mUserIconImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), LoginActivity.class));
+                UserBean userBean = GalleryApplication.getContext().getUserBean();
+                if (userBean == null) {
+                    startActivity(new Intent(getContext(), LoginActivity.class));
+                } else {
+                    startActivity(new Intent(getContext(), UserInfoActivity.class));
+                }
+
             }
         });
 
