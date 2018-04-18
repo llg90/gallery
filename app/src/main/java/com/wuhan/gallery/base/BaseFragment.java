@@ -1,6 +1,6 @@
 package com.wuhan.gallery.base;
 
-import android.support.v4.app.Fragment;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
 /**
  * @author: 李利刚
@@ -8,5 +8,5 @@ import android.support.v4.app.Fragment;
  * @date: 2018-04-11 15:34
  * @describe:
  */
-public class BaseFragment extends Fragment{
+public class BaseFragment extends RxFragment{
 }

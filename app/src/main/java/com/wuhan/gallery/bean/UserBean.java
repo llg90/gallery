@@ -1,5 +1,7 @@
 package com.wuhan.gallery.bean;
 
+import java.io.Serializable;
+
 /*
 "id": 13,
         "username": "jim",
@@ -10,7 +12,7 @@ package com.wuhan.gallery.bean;
         "createdate": "2018-04-16T07:43:12.000Z",
         "logindate": "2018-04-16T07:43:12.000Z"
 */
-public class UserBean {
+public class UserBean implements Serializable{
     private int id;
     private String username;
     private String email;

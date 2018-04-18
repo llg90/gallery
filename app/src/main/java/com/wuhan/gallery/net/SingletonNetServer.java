@@ -10,7 +10,9 @@ public enum SingletonNetServer {
     INSTANCE;
 
     public static final String sIMAGE_SERVER_HOST = "http://192.168.1.125:5000/images/";
+    public static final String SUCCESS = "0000";
     private UserServer mUserServer;
+    private ImageServer mImageServer;
 
     SingletonNetServer() {
         OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
@@ -25,9 +27,14 @@ public enum SingletonNetServer {
                 .build();
 
         mUserServer = retrofit.create(UserServer.class);
+        mImageServer = retrofit.create(ImageServer.class);
     }
 
     public UserServer getUserServer() {
         return mUserServer;
+    }
+
+    public ImageServer getImageServer() {
+        return mImageServer;
     }
 }

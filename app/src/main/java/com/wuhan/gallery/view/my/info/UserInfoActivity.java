@@ -3,8 +3,10 @@ package com.wuhan.gallery.view.my.info;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,11 +14,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.RequestOptions;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseActivity;
+import com.wuhan.gallery.base.ImageBean;
+import com.wuhan.gallery.bean.NetworkDataBean;
+import com.wuhan.gallery.bean.UserBean;
+import com.wuhan.gallery.net.NetObserver;
+import com.wuhan.gallery.net.SingletonNetServer;
 import com.wuhan.gallery.view.comm.GlideEngine;
 import com.wuhan.gallery.view.my.login.ModifyPasswordActivity;
 import com.wuhan.gallery.net.SimplifyObserver;
@@ -24,11 +33,21 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class UserInfoActivity extends BaseActivity {
     private ImageView mUserIcon;
@@ -43,6 +62,18 @@ public class UserInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         initView();
+
+        SingletonNetServer.INSTANCE.getImageServer().getImage("风景")
+                .compose(this.<NetworkDataBean<ImageBean>>bindToLifecycle())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetObserver<NetworkDataBean<ImageBean>>() {
+                    @Override
+                    public void onNext(NetworkDataBean<ImageBean> imageBeanNetworkDataBean) {
+                        if (imageBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                            ImageBean data = imageBeanNetworkDataBean.getData();
+                        }
+                    }
+                });
     }
 
     private void initView() {
@@ -51,8 +82,21 @@ public class UserInfoActivity extends BaseActivity {
         mPhoneText = findViewById(R.id.phone_text);
         mEmailText = findViewById(R.id.email_text);
 
-        String iconUrl = "http://img3.duitang.com/uploads/item/201605/08/20160508154653_AQavc.png";
-        Glide.with(this).load(iconUrl).apply(new RequestOptions().circleCrop()).into(mUserIcon);
+        UserBean userBean = GalleryApplication.getContext().getUserBean();
+        if (userBean != null) {
+            String url = SingletonNetServer.sIMAGE_SERVER_HOST + userBean.getIcon();
+            Glide.with(this).load(url).apply(new RequestOptions().circleCrop()).into(mUserIcon);
+
+            String name = userBean.getUsername();
+            mNameText.setText(name==null?"":name);
+
+            String phone = userBean.getTelephone();
+            mPhoneText.setText(phone==null?"":phone);
+
+            String email = userBean.getEmail();
+            mEmailText.setText(email==null?"":email);
+        }
+
 
 //        findViewById(R.id.user_icon_button).setOnClickListener(mOnClickListener);
         findViewById(R.id.back_button).setOnClickListener(mOnClickListener);
@@ -100,7 +144,32 @@ public class UserInfoActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             List<Uri> images = Matisse.obtainResult(data);
-            Glide.with(this).load(images.get(0)).apply(new RequestOptions().circleCrop()).into(mUserIcon);
+            if (images != null && !images.isEmpty()) {
+                Uri iconUri = images.get(0);
+                String[] projection = { MediaStore.Images.Media.DATA };
+                Cursor cur = managedQuery(iconUri, projection, null, null, null);
+                cur.moveToFirst();
+                String path = cur.getString(cur.getColumnIndex(MediaStore.Images.Media.DATA));
+                File iconFile = new File(path);
+                MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                builder.addFormDataPart("picture", iconFile.getName(), RequestBody.create(MediaType.parse("image/*"), iconFile));
+                SingletonNetServer.INSTANCE.getUserServer().upUserIcon(builder.build())
+                        .compose(this.<NetworkDataBean<String>>bindToLifecycle())
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new NetObserver<NetworkDataBean<String>>() {
+                            @Override
+                            public void onNext(NetworkDataBean<String> stringNetworkDataBean) {
+                                if (stringNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                                    String url = SingletonNetServer.sIMAGE_SERVER_HOST + stringNetworkDataBean.getData();
+                                    Glide.with(UserInfoActivity.this).load(url)
+                                            .apply(new RequestOptions().circleCrop()).into(mUserIcon);
+
+                                    UserBean userBean = GalleryApplication.getContext().getUserBean();
+                                    userBean.setIcon(stringNetworkDataBean.getData());
+                                }
+                            }
+                        });
+            }
         }
     }
 

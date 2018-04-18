@@ -56,11 +56,9 @@ public class MyFragment extends BaseLazyLoadFragment {
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden) {
-            getData();
-        }
+    public void onResume() {
+        super.onResume();
+        getData();
     }
 
     @Override

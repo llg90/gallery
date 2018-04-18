@@ -17,7 +17,7 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
     private boolean isPrepared = false;     //是否与View建立起映射关系
     private boolean isFirst = true; //用是否是第一次加载数据
 
-    private View mConvertView;
+    private View mContentView;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -33,13 +33,13 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mConvertView == null) {
-            mConvertView = inflater.inflate(getLayoutId(), container, false);
+        if (mContentView == null) {
+            mContentView = inflater.inflate(getLayoutId(), container, false);
         }
-        initView(mConvertView);
+        initView(mContentView);
         isPrepared = true;
         lazyLoadData();
-        return mConvertView;
+        return mContentView;
     }
 
     protected void lazyLoadData() {
