@@ -14,35 +14,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.RequestOptions;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseActivity;
-import com.wuhan.gallery.base.ImageBean;
 import com.wuhan.gallery.bean.NetworkDataBean;
 import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.net.NetObserver;
+import com.wuhan.gallery.net.SimplifyObserver;
 import com.wuhan.gallery.net.SingletonNetServer;
 import com.wuhan.gallery.view.comm.GlideEngine;
+import com.wuhan.gallery.view.comm.LoadingDialog;
 import com.wuhan.gallery.view.my.login.ModifyPasswordActivity;
-import com.wuhan.gallery.net.SimplifyObserver;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
@@ -55,6 +50,8 @@ public class UserInfoActivity extends BaseActivity {
     private TextView mPhoneText;
     private TextView mEmailText;
 
+    private LoadingDialog mLoadingDialog;
+
     private static final int REQUEST_CODE_CHOOSE = 10;
 
     @Override
@@ -62,18 +59,6 @@ public class UserInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         initView();
-
-        SingletonNetServer.INSTANCE.getImageServer().getImage("风景")
-                .compose(this.<NetworkDataBean<ImageBean>>bindToLifecycle())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetObserver<NetworkDataBean<ImageBean>>() {
-                    @Override
-                    public void onNext(NetworkDataBean<ImageBean> imageBeanNetworkDataBean) {
-                        if (imageBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
-                            ImageBean data = imageBeanNetworkDataBean.getData();
-                        }
-                    }
-                });
     }
 
     private void initView() {
@@ -153,10 +138,13 @@ public class UserInfoActivity extends BaseActivity {
                 File iconFile = new File(path);
                 MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
                 builder.addFormDataPart("picture", iconFile.getName(), RequestBody.create(MediaType.parse("image/*"), iconFile));
+               if (mLoadingDialog == null){
+                   mLoadingDialog = new LoadingDialog(this);
+               }
                 SingletonNetServer.INSTANCE.getUserServer().upUserIcon(builder.build())
                         .compose(this.<NetworkDataBean<String>>bindToLifecycle())
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new NetObserver<NetworkDataBean<String>>() {
+                        .subscribe(new NetObserver<NetworkDataBean<String>>(mLoadingDialog) {
                             @Override
                             public void onNext(NetworkDataBean<String> stringNetworkDataBean) {
                                 if (stringNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {

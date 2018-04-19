@@ -1,7 +1,6 @@
 package com.wuhan.gallery;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.wuhan.gallery.bean.UserBean;
 

@@ -16,6 +16,7 @@ import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.net.NetObserver;
 import com.wuhan.gallery.net.SingletonNetServer;
 import com.wuhan.gallery.view.MainActivity;
+import com.wuhan.gallery.view.comm.LoadingDialog;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -24,7 +25,7 @@ public class LoginActivity extends BaseActivity {
     private EditText mUserNameEt;
     private EditText mPasswordEt;
 
-//    private LoadingDialog mLoadingDialog;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,10 +57,13 @@ public class LoginActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "密码为空", Toast.LENGTH_SHORT).show();
         } else {
+            if (mLoadingDialog == null) {
+                mLoadingDialog = new LoadingDialog(this);
+            }
             SingletonNetServer.INSTANCE.getUserServer().login(name, password)
                     .compose(this.<NetworkDataBean<UserBean>>bindToLifecycle())
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new NetObserver<NetworkDataBean<UserBean>>() {
+                    .subscribe(new NetObserver<NetworkDataBean<UserBean>>(mLoadingDialog) {
                         @Override
                         public void onNext(NetworkDataBean<UserBean> userBeanNetworkDataBean) {
                             if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {

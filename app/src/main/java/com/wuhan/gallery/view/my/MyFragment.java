@@ -14,6 +14,7 @@ import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
 import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.net.SingletonNetServer;
+import com.wuhan.gallery.view.comm.LoadingDialog;
 import com.wuhan.gallery.view.my.info.UserInfoActivity;
 import com.wuhan.gallery.view.my.login.LoginActivity;
 
@@ -52,7 +53,6 @@ public class MyFragment extends BaseLazyLoadFragment {
 
             mUserNameTextView.setText(userBean.getUsername());
         }
-
     }
 
     @Override
