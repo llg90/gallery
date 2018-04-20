@@ -77,8 +77,6 @@ public class HostFragment extends BaseLazyLoadFragment {
             mLoadingDialog = new LoadingDialog(getContext());
         }
 
-        Log.e("okhttp", "this is test");
-
         SingletonNetServer.INSTANCE.getImageServer().clicktopload()
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetObserver<NetworkDataBean<HostDataBean>>() {
