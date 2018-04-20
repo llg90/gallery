@@ -8,6 +8,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.wuhan.gallery.R;
@@ -75,6 +76,8 @@ public class HostFragment extends BaseLazyLoadFragment {
         if (mLoadingDialog == null) {
             mLoadingDialog = new LoadingDialog(getContext());
         }
+
+        Log.e("okhttp", "this is test");
 
         SingletonNetServer.INSTANCE.getImageServer().clicktopload()
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
