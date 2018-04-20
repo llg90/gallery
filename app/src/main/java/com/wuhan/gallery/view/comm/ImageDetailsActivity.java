@@ -17,11 +17,14 @@ import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseActivity;
+import com.wuhan.gallery.bean.ImageBean;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ImageDetailsActivity extends BaseActivity {
     private int mPosition;
+    private List<ImageBean> mImageBeans;
     private ArrayList<String> mUrls;
     private SparseArray<View> mCacheView;
 
@@ -33,6 +36,7 @@ public class ImageDetailsActivity extends BaseActivity {
         if (intent != null) {
             mPosition = intent.getIntExtra("position", 0);
             mUrls = intent.getStringArrayListExtra("urls");
+            mImageBeans = intent.getParcelableArrayListExtra("images");
             mCacheView = new SparseArray<>(mUrls.size());
         } else {
             finish();
