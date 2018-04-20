@@ -57,6 +57,8 @@ public class HostFragment extends BaseLazyLoadFragment {
         mLikeListAdapter.notifyDataSetChanged();
         mBanner.setImages(mCircleImageUrlData);
         mBanner.start();
+
+
     }
 
     @Override
