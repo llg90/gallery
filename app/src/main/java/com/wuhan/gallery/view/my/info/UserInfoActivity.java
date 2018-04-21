@@ -138,7 +138,8 @@ public class UserInfoActivity extends BaseActivity {
                 File iconFile = new File(path);
                 MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
                 builder.addFormDataPart("picture", iconFile.getName(), RequestBody.create(MediaType.parse("image/*"), iconFile));
-               if (mLoadingDialog == null){
+                builder.addFormDataPart("id", GalleryApplication.getUserBean().getId() + "");
+                if (mLoadingDialog == null){
                    mLoadingDialog = new LoadingDialog(this);
                }
                 SingletonNetServer.INSTANCE.getUserServer().upUserIcon(builder.build())

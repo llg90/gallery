@@ -85,6 +85,7 @@ public class HostFragment extends BaseLazyLoadFragment {
         }
 
         SingletonNetServer.INSTANCE.getImageServer().clicktopload()
+                .compose(this.<NetworkDataBean<HostDataBean>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetObserver<NetworkDataBean<HostDataBean>>() {
                     @Override
@@ -99,10 +100,8 @@ public class HostFragment extends BaseLazyLoadFragment {
                                     String url = SingletonNetServer.sIMAGE_SERVER_HOST + imageBean.getImageurl();
                                     mBannerImageUrlData.add(url);
                                 }
-                              //  mBannerImageUrlData.addAll(banner);
                                 mBanner.setImages(mBannerImageUrlData);
                                 mBanner.start();
-                                //mLeaderBoardAdapter.notifyDataSetChanged();
                             }
 
                             if (topclick != null) {
@@ -114,7 +113,6 @@ public class HostFragment extends BaseLazyLoadFragment {
                                     i++;
                                     if (i == 8) break;
                                 }
-                               // mLeaderBoardData.addAll(topclick);
                                 mLeaderBoardAdapter.notifyDataSetChanged();
                             }
                         }

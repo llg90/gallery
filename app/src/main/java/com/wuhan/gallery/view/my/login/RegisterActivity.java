@@ -4,15 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseActivity;
 import com.wuhan.gallery.bean.NetworkDataBean;
+import com.wuhan.gallery.bean.UserBean;
+import com.wuhan.gallery.net.NetObserver;
 import com.wuhan.gallery.net.SingletonNetServer;
+import com.wuhan.gallery.view.MainActivity;
 import com.wuhan.gallery.view.comm.LoadingDialog;
 import com.wuhan.gallery.view.my.MyFragment;
 
@@ -80,38 +85,36 @@ public class RegisterActivity extends BaseActivity {
             if (mLoadingDialog == null) {
                 mLoadingDialog = new LoadingDialog(this);
             }
+
             SingletonNetServer.INSTANCE.getUserServer().register(name, pwd,email, telephone)
+                    .compose(this.<NetworkDataBean<Boolean>>bindToLifecycle())
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<NetworkDataBean>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
+                    .subscribe(new NetObserver<NetworkDataBean<Boolean>>(mLoadingDialog){
 
                         @Override
-                        public void onNext(NetworkDataBean networkDataBean) {
-                            if (networkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
-//                                UserBean data = userBeanNetworkDataBean.getData();
-//                                GalleryApplication.getContext().setUserBean(data);
-                                startActivity(new Intent(RegisterActivity.this, MyFragment.class));
-                            } else {
-                                Toast.makeText(RegisterActivity.this, networkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        public void onNext(NetworkDataBean<Boolean> booleanNetworkDataBean) {
+                            if (booleanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)){
+                                Toast.makeText(RegisterActivity.this, booleanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
                             }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
-
                         }
                     });
 
+//                            SingletonNetServer.INSTANCE.getUserServer().login(name, password)
+//                                    .compose(this.<NetworkDataBean<UserBean>>bindToLifecycle())
+//                                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                                    .subscribe(new NetObserver<NetworkDataBean<UserBean>>(mLoadingDialog) {
+//                                        @Override
+//                                        public void onNext(NetworkDataBean<UserBean> userBeanNetworkDataBean) {
+//                                            if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+//                                                UserBean data = userBeanNetworkDataBean.getData();
+//                                                GalleryApplication.getContext().setUserBean(data);
+//                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                                            } else {
+//                                                Toast.makeText(LoginActivity.this, userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        }
+//                                    });
+
         }
-
-
     }
 }

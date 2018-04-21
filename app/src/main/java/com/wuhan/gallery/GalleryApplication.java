@@ -4,15 +4,10 @@ import android.app.Application;
 
 import com.wuhan.gallery.bean.UserBean;
 
-/**
- * @author: 李利刚
- * @E-mail: lgzc_work@163.com
- * @date: 2018-04-11 15:36
- * @describe:
- */
+
 public class GalleryApplication extends Application {
     private static GalleryApplication sContext;
-    private UserBean mUserBean;
+    private static UserBean mUserBean;
 
     @Override
     public void onCreate() {
@@ -24,7 +19,7 @@ public class GalleryApplication extends Application {
         return sContext;
     }
 
-    public UserBean getUserBean() {
+    public static UserBean getUserBean() {
         return mUserBean;
     }
 

@@ -15,12 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author: 李利刚
- * @E-mail: lgzc_work@163.com
- * @date: 2018-04-11 17:05
- * @describe:
- */
+
 public class HomeFragment extends BaseLazyLoadFragment {
     private TabLayout mTabLayoutView;
     private ViewPager mContentPagerView;

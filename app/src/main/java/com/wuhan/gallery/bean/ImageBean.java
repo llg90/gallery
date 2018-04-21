@@ -10,13 +10,17 @@ public class ImageBean implements Parcelable{
     private String imageurl;
     private int type;
     private int clickcount;
- //   private int
+    private int browsecount;
+    private int collectcount;
+    //   private int
 
     protected ImageBean(Parcel in) {
         id = in.readInt();
         imageurl = in.readString();
         type = in.readInt();
         clickcount = in.readInt();
+        browsecount = in.readInt();
+        collectcount = in.readInt();
     }
 
     @Override
@@ -25,6 +29,8 @@ public class ImageBean implements Parcelable{
         dest.writeString(imageurl);
         dest.writeInt(type);
         dest.writeInt(clickcount);
+        dest.writeInt(browsecount);
+        dest.writeInt(collectcount);
     }
 
     @Override
@@ -74,5 +80,21 @@ public class ImageBean implements Parcelable{
 
     public void setClickcount(int clickcount) {
         this.clickcount = clickcount;
+    }
+
+    public int getBrowsecount() {
+        return browsecount;
+    }
+
+    public void setBrowsecount(int browsecount) {
+        this.browsecount = browsecount;
+    }
+
+    public int getCollectcount() {
+        return collectcount;
+    }
+
+    public void setCollectcount(int collectcount) {
+        this.collectcount = collectcount;
     }
 }
