@@ -20,4 +20,8 @@ public interface UserServer {
 
     @POST("uploadImages")
     Observable<NetworkDataBean<String>> upUserIcon(@Body RequestBody body);
+
+    @POST("user/register")
+    Observable<NetworkDataBean<Boolean>> register(@Field("username") String name, @Field("password") String password,
+                                         @Field("email") String email, @Field("telephone") String telephone);
 }

@@ -10,6 +10,7 @@ public class ImageBean implements Parcelable{
     private String imageurl;
     private int type;
     private int clickcount;
+ //   private int
 
     protected ImageBean(Parcel in) {
         id = in.readInt();

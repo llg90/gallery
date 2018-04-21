@@ -32,6 +32,8 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        initView();
+
         mUserNameEt = findViewById(R.id.user_name_ed);
         mPasswordEt = findViewById(R.id.user_password_ed);
         findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
@@ -44,6 +46,21 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
+        findViewById(R.id.register_text).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
+    }
+
+    private void initView() {
+        findViewById(R.id.loginback_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

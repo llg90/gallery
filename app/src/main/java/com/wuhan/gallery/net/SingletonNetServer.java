@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public enum SingletonNetServer {
     INSTANCE;
 
-    public static final String sIMAGE_SERVER_HOST = "http://192.168.1.102:5000/images/";
+    public static final String sIMAGE_SERVER_HOST = "http://115.156.14.67:5000/images/";
     public static final String SUCCESS = "0000";
     private UserServer mUserServer;
     private ImageServer mImageServer;
@@ -23,7 +23,7 @@ public enum SingletonNetServer {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
-                .baseUrl("http://192.168.1.102:5000/")
+                .baseUrl("http://115.156.14.67:5000/")
                 .build();
 
         mUserServer = retrofit.create(UserServer.class);

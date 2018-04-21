@@ -32,21 +32,28 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class HostFragment extends BaseLazyLoadFragment {
-    private ArrayList<ImageBean> mLeaderBoardData = new ArrayList<>();
+    //点击榜
+    private ArrayList<String> mLeaderBoardData = new ArrayList<>();
     private HostImageAdapter mLeaderBoardAdapter;
 
-    private ArrayList<ImageBean> mLikeListData = new ArrayList<>();
+    //猜你喜欢
+    private ArrayList<String> mLikeListData = new ArrayList<>();
     private HostImageAdapter mLikeListAdapter;
 
+    //首页轮播
     private Banner mBanner;
-    private ArrayList<ImageBean> mCircleImageUrlData = new ArrayList<>();
+    private ArrayList<String> mBannerImageUrlData = new ArrayList<>();
+
+//    private ArrayList<ImageBean> mBannerData = new ArrayList<>();
+//    private HostImageAdapter mBannerAdapter;
+
 
     private LoadingDialog mLoadingDialog;
 
     @Override
     protected void getData() {
-/*
-        mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523471754721&di=ee50059c20a127535f3f4d216caaee6b&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fpic%2Fitem%2F9825bc315c6034a84e310db2c713495409237635.jpg");
+
+/*      mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523471754721&di=ee50059c20a127535f3f4d216caaee6b&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fpic%2Fitem%2F9825bc315c6034a84e310db2c713495409237635.jpg");
         mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523472017828&di=739f16b500e2832880621a58b5ccad80&imgtype=0&src=http%3A%2F%2Fimg1qn.moko.cc%2F2017-02-18%2F5ef4f3a3-8a8f-467e-befb-42e5d909ecce.jpg");
         mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473066906&di=384be74479df524095d705084ef035c4&imgtype=0&src=http%3A%2F%2Fimgphoto.gmw.cn%2Fattachement%2Fjpg%2Fsite2%2F20160525%2Feca86bd9dc4718af3fd92e.jpg");
         mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473083050&di=4cbed09a785cdc1345ddc83cdf3fccf5&imgtype=0&src=http%3A%2F%2Fwww.hinews.cn%2Fpic%2F0%2F18%2F18%2F24%2F18182489_999915.jpg");
@@ -70,8 +77,8 @@ public class HostFragment extends BaseLazyLoadFragment {
         mLeaderBoardAdapter.notifyDataSetChanged();
         mLikeListAdapter.notifyDataSetChanged();
         mBanner.setImages(mCircleImageUrlData);
-        mBanner.start();
-*/
+        mBanner.start();*/
+
 
         if (mLoadingDialog == null) {
             mLoadingDialog = new LoadingDialog(getContext());
@@ -84,20 +91,37 @@ public class HostFragment extends BaseLazyLoadFragment {
                     public void onNext(NetworkDataBean<HostDataBean> hostDataBeanNetworkDataBean) {
                         if (hostDataBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             HostDataBean data = hostDataBeanNetworkDataBean.getData();
-                            List<ImageBean> leader = data.getClicklist();
-                            List<ImageBean> like   = data.getMaxlist();
-                            if (leader != null) {
-                                mLeaderBoardData.addAll(leader);
-                                mLeaderBoardAdapter.notifyDataSetChanged();
+                            List<ImageBean> banner = data.getMaxlist();
+                            List<ImageBean> topclick   = data.getClicklist();
+                            if (banner != null) {
+
+                                for (ImageBean imageBean : banner){
+                                    String url = SingletonNetServer.sIMAGE_SERVER_HOST + imageBean.getImageurl();
+                                    mBannerImageUrlData.add(url);
+                                }
+                              //  mBannerImageUrlData.addAll(banner);
+                                mBanner.setImages(mBannerImageUrlData);
+                                mBanner.start();
+                                //mLeaderBoardAdapter.notifyDataSetChanged();
                             }
 
-                            if (like != null) {
-                                mLikeListData.addAll(like);
-                                mLikeListAdapter.notifyDataSetChanged();
+                            if (topclick != null) {
+                                int i = 0;
+                                for (ImageBean imageBean : topclick)
+                                {
+                                    String url = SingletonNetServer.sIMAGE_SERVER_HOST + imageBean.getImageurl();
+                                    mLeaderBoardData.add(url);
+                                    i++;
+                                    if (i == 8) break;
+                                }
+                               // mLeaderBoardData.addAll(topclick);
+                                mLeaderBoardAdapter.notifyDataSetChanged();
                             }
                         }
                     }
                 });
+
+
     }
 
     @Override
@@ -106,7 +130,7 @@ public class HostFragment extends BaseLazyLoadFragment {
     }
 
     @Override
-    protected void initView(View convertView) {
+    protected void initView(View contentView) {
         Drawable decorationDrawable;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider, getContext().getTheme());
@@ -114,7 +138,7 @@ public class HostFragment extends BaseLazyLoadFragment {
             decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider);
         }
 
-        RecyclerView leaderBoardListView = convertView.findViewById(R.id.leader_board_list_view);
+        RecyclerView leaderBoardListView = contentView.findViewById(R.id.leader_board_list_view);
         leaderBoardListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         DividerItemDecoration itemDecoration = new DividerItemDecoration(leaderBoardListView.getContext(), LinearLayoutManager.HORIZONTAL);
         itemDecoration.setDrawable(decorationDrawable);
@@ -125,8 +149,8 @@ public class HostFragment extends BaseLazyLoadFragment {
             public void OnItemClick(View itemView, int position) {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
                 intent.putExtra("position", position);
-                intent.putParcelableArrayListExtra("images", mLeaderBoardData);
-//                intent.putStringArrayListExtra("urls", (ArrayList<String>) mLeaderBoardData);
+//                intent.putParcelableArrayListExtra("images", mLeaderBoardData);
+                intent.putStringArrayListExtra("urls", (ArrayList<String>)mLeaderBoardData);
                 ActivityOptionsCompat activityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(itemView, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
@@ -134,7 +158,7 @@ public class HostFragment extends BaseLazyLoadFragment {
         });
         leaderBoardListView.setAdapter(mLeaderBoardAdapter);
 
-        RecyclerView likeListView = convertView.findViewById(R.id.like_list_view);
+        RecyclerView likeListView = contentView.findViewById(R.id.like_list_view);
         likeListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         likeListView.addItemDecoration(itemDecoration);
         mLikeListAdapter = new HostImageAdapter(this, mLikeListData);
@@ -143,7 +167,7 @@ public class HostFragment extends BaseLazyLoadFragment {
             public void OnItemClick(View itemView, int position) {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
                 intent.putExtra("position", position);
-//                intent.putStringArrayListExtra("urls", (ArrayList<String>) mLikeListData);
+               intent.putStringArrayListExtra("urls", (ArrayList<String>) mLikeListData);
                 ActivityOptionsCompat activityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(itemView, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
@@ -151,7 +175,9 @@ public class HostFragment extends BaseLazyLoadFragment {
         });
         likeListView.setAdapter(mLikeListAdapter);
 
-        mBanner = convertView.findViewById(R.id.banner_view);
+//        private Banner mBanner;
+//        private ArrayList<ImageBean> mBannerImageUrlData = new ArrayList<>();
+        mBanner = contentView.findViewById(R.id.banner_view);
         mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
         mBanner.setIndicatorGravity(BannerConfig.RIGHT);
         mBanner.setImageLoader(new GlideImageLoader());
@@ -160,12 +186,12 @@ public class HostFragment extends BaseLazyLoadFragment {
             @Override
             public void OnBannerClick(int position) {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
-//                ArrayList<String> urls = new ArrayList<>();
-//                urls.add(mCircleImageUrlData.get(position));
-                //intent.putStringArrayListExtra("urls", urls);
-                ArrayList<ImageBean> imageBeans = new ArrayList<>();
-                imageBeans.add(mCircleImageUrlData.get(position));
-                intent.putParcelableArrayListExtra("images", imageBeans);
+                ArrayList<String> urls = new ArrayList<>();
+                urls.add(mBannerImageUrlData.get(position));
+                intent.putStringArrayListExtra("urls", urls);
+//                ArrayList<ImageBean> imageBeans = new ArrayList<>();
+//                imageBeans.add(mBannerImageUrlData.get(position));
+//                intent.putParcelableArrayListExtra("images", imageBeans);
 
                 ActivityOptionsCompat activityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create((View)mBanner, "image"));

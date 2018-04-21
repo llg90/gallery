@@ -23,9 +23,11 @@ import com.wuhan.gallery.net.SingletonNetServer;
 
 import java.util.List;
 
+import static com.wuhan.gallery.GalleryApplication.getContext;
+
 class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder> {
     private Fragment mFragment;
-    private List<ImageBean> mImageUrls;
+    private List<String> mImageUrls;
     private OnItemClickListener mOnClickListener;
 
     interface  OnItemClickListener {
@@ -36,7 +38,7 @@ class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder>
         mOnClickListener = onClickListener;
     }
 
-    HostImageAdapter(Fragment fragment, List<ImageBean> imageUrls) {
+    HostImageAdapter(Fragment fragment, List<String> imageUrls) {
         mFragment = fragment;
         mImageUrls = imageUrls;
     }
@@ -64,24 +66,23 @@ class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder>
 
         int roundingRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 10, Resources.getSystem().getDisplayMetrics());
-        String url = SingletonNetServer.sIMAGE_SERVER_HOST + mImageUrls.get(position).getImageurl();
-        Glide.with(mFragment).load(url)
+        Glide.with(mFragment).load(mImageUrls.get(position))
                 .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(roundingRadius)))
                 .into(holder.mImageView);
     }
 
     @Override
     public int getItemCount() {
-        return mImageUrls==null?0:mImageUrls.size();
+        return mImageUrls == null ? 0 : mImageUrls.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView mImageView;
-        CheckBox mCollectButton;
+        CheckBox mClickButton;
         public ViewHolder(View itemView) {
             super(itemView);
             mImageView     = itemView.findViewById(R.id.image_view);
-            mCollectButton = itemView.findViewById(R.id.collect_button);
+            mClickButton = itemView.findViewById(R.id.click_button);
         }
     }
 }

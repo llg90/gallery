@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ImageDetailsActivity extends BaseActivity {
     private int mPosition;
-    private List<ImageBean> mImageBeans;
+  //  private List<ImageBean> mImageBeans;
     private ArrayList<String> mUrls;
     private SparseArray<View> mCacheView;
 
@@ -36,7 +36,7 @@ public class ImageDetailsActivity extends BaseActivity {
         if (intent != null) {
             mPosition = intent.getIntExtra("position", 0);
             mUrls = intent.getStringArrayListExtra("urls");
-            mImageBeans = intent.getParcelableArrayListExtra("images");
+        //    mImageBeans = intent.getParcelableArrayListExtra("images");
             mCacheView = new SparseArray<>(mUrls.size());
         } else {
             finish();
