@@ -76,6 +76,7 @@ public class MyFragment extends BaseLazyLoadFragment {
                     public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
                         if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             List<ImageBean> data = listNetworkDataBean.getData();
+                            mCollectImageData.clear();
                             mCollectImageData.addAll(data);
                             mCollectImageAdapter.notifyDataSetChanged();
                         }
@@ -90,6 +91,7 @@ public class MyFragment extends BaseLazyLoadFragment {
                     public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
                         if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             List<ImageBean> data = listNetworkDataBean.getData();
+                            mRecordImageData.clear();
                             mRecordImageData.addAll(data);
                             mRecordImageAdapter.notifyDataSetChanged();
                         }

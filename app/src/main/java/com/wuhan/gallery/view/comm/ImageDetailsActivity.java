@@ -105,6 +105,7 @@ public class ImageDetailsActivity extends BaseActivity {
             }
         });
 
+        mSelectPosition = mPosition;
         viewPager.setCurrentItem(mPosition);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -129,6 +130,29 @@ public class ImageDetailsActivity extends BaseActivity {
         mLoadingDialog = new LoadingDialog(this);
         mLikeCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
         mCollectCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
+
+        UserBean userBean = GalleryApplication.getUserBean();
+        if (userBean == null) {
+            Toast.makeText(ImageDetailsActivity.this, "你还未登录", Toast.LENGTH_SHORT).show();
+        } else {
+            int userId  = userBean.getId();
+            int imageId = mImageBeans.get(mSelectPosition).getId();
+            int status = ImageStatusEnum.BROWSE.getValue();
+            SingletonNetServer.INSTANCE.getImageServer().setImageStatus(userId, imageId, status)
+                    .compose(ImageDetailsActivity.this.<NetworkDataBean<Boolean>>bindToLifecycle())
+                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new NetObserver<NetworkDataBean<Boolean>>(mLoadingDialog) {
+
+                        @Override
+                        public void onNext(NetworkDataBean<Boolean> booleanNetworkDataBean) {
+                            if (!booleanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                                Toast.makeText(ImageDetailsActivity.this, booleanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+        }
+
     }
 
     CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
@@ -158,8 +182,6 @@ public class ImageDetailsActivity extends BaseActivity {
                             });
 
                 }
-
-
             }
         }
     };
