@@ -27,6 +27,7 @@
     <string name="set_item_1">检查版本</string>
 
     <string name="logout">退出</string>
+    <string name="logout_text">退出登录</string>
 
     <string name="user_info">用户信息</string>
     <string name="user_info_item_0">头像</string>

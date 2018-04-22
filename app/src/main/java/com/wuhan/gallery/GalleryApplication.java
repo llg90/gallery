@@ -23,7 +23,7 @@ public class GalleryApplication extends Application {
         return mUserBean;
     }
 
-    public void setUserBean(UserBean userBean) {
+    public static void setUserBean(UserBean userBean) {
         mUserBean = userBean;
     }
 }

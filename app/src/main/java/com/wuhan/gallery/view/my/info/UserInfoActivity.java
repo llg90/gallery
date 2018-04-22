@@ -90,6 +90,13 @@ public class UserInfoActivity extends BaseActivity {
         findViewById(R.id.phone_button).setOnClickListener(mOnClickListener);
         findViewById(R.id.email_button).setOnClickListener(mOnClickListener);
         findViewById(R.id.password_button).setOnClickListener(mOnClickListener);
+        findViewById(R.id.logout_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GalleryApplication.setUserBean(null);
+                finish();
+            }
+        });
 
         View userIconButton = findViewById(R.id.user_icon_button);
         RxView.clicks(userIconButton)
