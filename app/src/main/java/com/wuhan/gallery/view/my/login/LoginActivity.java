@@ -1,6 +1,8 @@
 package com.wuhan.gallery.view.my.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -74,6 +76,13 @@ public class LoginActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "密码为空", Toast.LENGTH_SHORT).show();
         } else {
+            SharedPreferences sharedPreferences = getSharedPreferences("gallery", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("name", name);
+            editor.putString("password", password);
+            editor.apply();
+            editor.commit();
+
             if (mLoadingDialog == null) {
                 mLoadingDialog = new LoadingDialog(this);
             }

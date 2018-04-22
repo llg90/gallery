@@ -1,16 +1,29 @@
 package com.wuhan.gallery.view;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
+import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseFragment;
 import com.wuhan.gallery.base.BaseFragmentActivity;
+import com.wuhan.gallery.bean.NetworkDataBean;
+import com.wuhan.gallery.bean.UserBean;
+import com.wuhan.gallery.net.NetObserver;
+import com.wuhan.gallery.net.SingletonNetServer;
 import com.wuhan.gallery.view.home.HomeFragment;
 import com.wuhan.gallery.view.my.MyFragment;
+import com.wuhan.gallery.view.my.login.LoginActivity;
 import com.wuhan.gallery.view.record.RecordFragment;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseFragmentActivity {
     private BaseFragment mSelectedFragment;
@@ -22,6 +35,7 @@ public class MainActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_main);
         initContentFragment();
         initBottomBar();
+        login();
     }
 
     private void initBottomBar() {
@@ -62,4 +76,26 @@ public class MainActivity extends BaseFragmentActivity {
         mSelectedFragment = mFragments[0];
     }
 
+    private void login() {
+        SharedPreferences sharedPreferences = getSharedPreferences("gallery", Context.MODE_PRIVATE);
+        String name = sharedPreferences.getString("name", null);
+        String pass = sharedPreferences.getString("password", null);
+
+        if (name != null && pass != null) {
+            SingletonNetServer.INSTANCE.getUserServer().login(name, pass)
+                    .compose(this.<NetworkDataBean<UserBean>>bindToLifecycle())
+                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new NetObserver<NetworkDataBean<UserBean>>() {
+                        @Override
+                        public void onNext(NetworkDataBean<UserBean> userBeanNetworkDataBean) {
+                            if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                                UserBean data = userBeanNetworkDataBean.getData();
+                                GalleryApplication.setUserBean(data);
+                            } else {
+                                Toast.makeText(MainActivity.this, userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
 }
