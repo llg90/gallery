@@ -35,6 +35,12 @@ public class HomeFragment extends BaseLazyLoadFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mContentPagerView.setCurrentItem(0);
+    }
+
+    @Override
     protected void initView(View convertView) {
         mTabLayoutView = convertView.findViewById(R.id.tab_layout_view);
         mContentPagerView = convertView.findViewById(R.id.content_pager_view);
