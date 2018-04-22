@@ -147,7 +147,7 @@ public class MyFragment extends BaseLazyLoadFragment {
         mUserIconImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserBean userBean = GalleryApplication.getContext().getUserBean();
+                UserBean userBean = GalleryApplication.getUserBean();
                 if (userBean == null) {
                     startActivity(new Intent(getContext(), LoginActivity.class));
                 } else {

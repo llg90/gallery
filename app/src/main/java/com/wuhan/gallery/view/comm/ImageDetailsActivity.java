@@ -132,9 +132,7 @@ public class ImageDetailsActivity extends BaseActivity {
         mCollectCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         UserBean userBean = GalleryApplication.getUserBean();
-        if (userBean == null) {
-            Toast.makeText(ImageDetailsActivity.this, "你还未登录", Toast.LENGTH_SHORT).show();
-        } else {
+        if (userBean != null) {
             int userId  = userBean.getId();
             int imageId = mImageBeans.get(mSelectPosition).getId();
             int status = ImageStatusEnum.BROWSE.getValue();
@@ -150,7 +148,6 @@ public class ImageDetailsActivity extends BaseActivity {
                             }
                         }
                     });
-
         }
 
     }
