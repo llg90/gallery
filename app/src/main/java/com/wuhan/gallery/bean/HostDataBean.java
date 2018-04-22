@@ -5,6 +5,7 @@ import java.util.List;
 public class HostDataBean {
     private List<ImageBean> maxlist;
     private List<ImageBean> clicklist;
+    private List<ImageBean> likelist;
 
     public List<ImageBean> getMaxlist() {
         return maxlist;
@@ -20,5 +21,13 @@ public class HostDataBean {
 
     public void setClicklist(List<ImageBean> clicklist) {
         this.clicklist = clicklist;
+    }
+
+    public List<ImageBean> getLikelist() {
+        return likelist;
+    }
+
+    public void setLikelist(List<ImageBean> likelist) {
+        this.likelist = likelist;
     }
 }

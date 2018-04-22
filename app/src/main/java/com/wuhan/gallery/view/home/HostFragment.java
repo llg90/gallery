@@ -11,11 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
 import com.wuhan.gallery.bean.HostDataBean;
 import com.wuhan.gallery.bean.ImageBean;
 import com.wuhan.gallery.bean.NetworkDataBean;
+import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.net.NetObserver;
 import com.wuhan.gallery.net.SingletonNetServer;
 import com.wuhan.gallery.view.comm.ImageDetailsActivity;
@@ -58,7 +60,9 @@ public class HostFragment extends BaseLazyLoadFragment {
             mLoadingDialog = new LoadingDialog(getContext());
         }
 
-        SingletonNetServer.INSTANCE.getImageServer().clicktopload()
+        UserBean userBean = GalleryApplication.getUserBean();
+        int id = userBean==null?0:userBean.getId();
+        SingletonNetServer.INSTANCE.getImageServer().clicktopload(id)
                 .compose(this.<NetworkDataBean<HostDataBean>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetObserver<NetworkDataBean<HostDataBean>>() {
@@ -66,10 +70,12 @@ public class HostFragment extends BaseLazyLoadFragment {
                     public void onNext(NetworkDataBean<HostDataBean> hostDataBeanNetworkDataBean) {
                         if (hostDataBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             HostDataBean data = hostDataBeanNetworkDataBean.getData();
-                            List<ImageBean> banner = data.getMaxlist();
-                            List<ImageBean> topclick   = data.getClicklist();
+                            List<ImageBean> banner   = data.getMaxlist();
+                            List<ImageBean> topclick = data.getClicklist();
+                            List<ImageBean> likelist = data.getLikelist();
                             if (banner != null) {
                                 mBannerImage = banner;
+                                mBannerImageUrlData.clear();
                                 for (ImageBean imageBean : banner){
                                     String url = SingletonNetServer.sIMAGE_SERVER_HOST + imageBean.getImageurl();
                                     mBannerImageUrlData.add(url);
@@ -79,14 +85,27 @@ public class HostFragment extends BaseLazyLoadFragment {
                             }
 
                             if (topclick != null) {
+                                mLeaderBoardData.clear();
                                 mLeaderBoardData.addAll(topclick);
                                 mLeaderBoardAdapter.notifyDataSetChanged();
+                            }
+
+                            if (likelist != null) {
+                                mLikeListData.clear();
+                                mLikeListData.addAll(likelist);
+                                mLikeListAdapter.notifyDataSetChanged();
                             }
                         }
                     }
                 });
 
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
     }
 
     @Override

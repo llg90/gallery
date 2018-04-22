@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 public interface ImageServer {
 
     @GET("execute/clicktopload")
-    Observable<NetworkDataBean<HostDataBean>> clicktopload();
+    Observable<NetworkDataBean<HostDataBean>> clicktopload(@Query("id") int id);
 
     @GET("execute/images")
     Observable<NetworkDataBean<List<ImageBean>>> getImagesByType(@Query("type") int type);
