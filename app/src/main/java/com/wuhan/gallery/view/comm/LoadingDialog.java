@@ -17,8 +17,8 @@ public class LoadingDialog extends Dialog {
     public LoadingDialog(@NonNull Context context) {
         super(context);
         setContentView(R.layout.dialog_loading);
-        setCancelable(false);
-        setCanceledOnTouchOutside(false);
+//        setCancelable(false);
+//        setCanceledOnTouchOutside(false);
         Window window = getWindow();
         ImageView imageView = findViewById(R.id.image_view);
         mAnimationDrawable = (AnimationDrawable) imageView.getDrawable();
