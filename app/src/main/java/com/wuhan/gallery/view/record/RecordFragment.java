@@ -8,13 +8,23 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
+import com.wuhan.gallery.bean.ImageBean;
+import com.wuhan.gallery.bean.NetworkDataBean;
 import com.wuhan.gallery.bean.RecordImageBean;
+import com.wuhan.gallery.bean.UserBean;
+import com.wuhan.gallery.constant.ImageStatusEnum;
+import com.wuhan.gallery.net.NetObserver;
+import com.wuhan.gallery.net.SingletonNetServer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author: 李利刚
@@ -31,25 +41,42 @@ public class RecordFragment extends BaseLazyLoadFragment {
 
     @Override
     protected void getData() {
-        List<String> list = Arrays.asList(
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524122786&di=36a5f3864591ddad94a591954648c6eb&imgtype=jpg&er=1&src=http%3A%2F%2Fimg.taopic.com%2Fuploads%2Fallimg%2F121114%2F240498-1211141U24824.jpg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063807&di=088df43aebf13eaa732507035567e9ae&imgtype=0&src=http%3A%2F%2Fimg.taopic.com%2Fuploads%2Fallimg%2F121119%2F240509-12111919121974.jpg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063807&di=092ceae48ad66ce26dfb7ab0cdb80b0d&imgtype=0&src=http%3A%2F%2Fpic8.nipic.com%2F20100622%2F4445776_212046052394_2.jpg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063807&di=96213598320151288b18b65a23bde161&imgtype=0&src=http%3A%2F%2Fpic2015.5442.com%2F2016%2F0518%2F21%2F8.jpg%2521960.jpg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063806&di=a4270bdbdb2527071ade3bf510059bcc&imgtype=0&src=http%3A%2F%2Fimage.tianjimedia.com%2FuploadImages%2F2014%2F067%2F3I26385RL51U.jpg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063806&di=65e653df620050d521e84abf0ae4c7de&imgtype=0&src=http%3A%2F%2Fimg.tupianzj.com%2Fuploads%2Fallimg%2F20170803%2F0Gvp6hGAlV154.jpeg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063805&di=5794a5390e95d56c1123634ca3a8e087&imgtype=0&src=http%3A%2F%2Fh.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F37d12f2eb9389b50c0c9264e8735e5dde7116efc.jpg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063805&di=7a9a73cf48f498cb38e8eac1877e011d&imgtype=0&src=http%3A%2F%2Fimg.taopic.com%2Fuploads%2Fallimg%2F121119%2F240509-12111914422314.jpg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063805&di=b299e225db08d0bd7af4c6d807563042&imgtype=0&src=http%3A%2F%2Fatt.kidblog.cn%2Fxm%2F201406%2F8%2F2436402_1402216504Y8YB.jpg",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523528063804&di=016e984316966ab389d18128effdd076&imgtype=0&src=http%3A%2F%2Fimg.taopic.com%2Fuploads%2Fallimg%2F121114%2F240498-12111414560353.jpg");
+        UserBean userBean = GalleryApplication.getUserBean();
+        if (userBean == null) return;
+        SingletonNetServer.INSTANCE.getImageServer().getImageBrowse(userBean.getId(), ImageStatusEnum.BROWSE.getValue())
+                .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new NetObserver<NetworkDataBean<List<ImageBean>>>() {
+                    @Override
+                    public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
+                        if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                            mRecordImageBeans.clear();
+                            List<ImageBean> data = listNetworkDataBean.getData();
+                            String time = data.get(0).getAddtime();
+                            int position = 1;
+                            mRecordImageBeans.add(new RecordImageBean(0,"2018-04-16", null));
+                            mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+                            for (ImageBean item : data) {
+                                if (item.getAddtime().equals(time)) {
+                                    mRecordImageBeans.get(position).getUrls().add(item);
+                                } else {
+                                    position+=2;
+                                    mRecordImageBeans.add(new RecordImageBean(0,time, null));
+                                    mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+                                }
+                            }
+                            mRecordImageRecyclerAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+    }
 
-        mRecordImageBeans.add(new RecordImageBean(0,"2018-04-16", null));
-        mRecordImageBeans.add(new RecordImageBean(1,null, list));
-        mRecordImageBeans.add(new RecordImageBean(0,"2018-04-15", null));
-        mRecordImageBeans.add(new RecordImageBean(1,null, list));
-        mRecordImageBeans.add(new RecordImageBean(0,"2018-04-13", null));
-        mRecordImageBeans.add(new RecordImageBean(1,null, list));
-        mRecordImageRecyclerAdapter.notifyDataSetChanged();
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            getData();
+        }
     }
 
     @Override

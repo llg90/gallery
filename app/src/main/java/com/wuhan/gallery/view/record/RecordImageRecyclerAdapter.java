@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
+import com.wuhan.gallery.bean.ImageBean;
 import com.wuhan.gallery.bean.RecordImageBean;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class RecordImageRecyclerAdapter extends RecyclerView.Adapter {
         if (holder instanceof TextViewHolder) {
             ((TextViewHolder) holder).textView.setText(mRecordImageBeans.get(position).getTime());
         } else if (holder instanceof ImageGridViewHolder) {
-            List<String> urls = mRecordImageBeans.get(position).getUrls();
+            List<ImageBean> urls = mRecordImageBeans.get(position).getUrls();
             GridView gridView = ((ImageGridViewHolder) holder).mGridView;
             int displayWidth = gridView.getContext().getResources().getDisplayMetrics().widthPixels;
             int lineNumber = urls.size()%3==0?urls.size()/3:urls.size()/3+1;

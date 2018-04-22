@@ -8,6 +8,7 @@ import android.os.Parcelable;
 public class ImageBean implements Parcelable{
     private int id;
     private String imageurl;
+    private String addtime;
     private int type;
     private int clickcount;
     private int browsecount;
@@ -18,6 +19,7 @@ public class ImageBean implements Parcelable{
     protected ImageBean(Parcel in) {
         id = in.readInt();
         imageurl = in.readString();
+        addtime = in.readString();
         type = in.readInt();
         clickcount = in.readInt();
         browsecount = in.readInt();
@@ -29,6 +31,7 @@ public class ImageBean implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(imageurl);
+        dest.writeString(addtime);
         dest.writeInt(type);
         dest.writeInt(clickcount);
         dest.writeInt(browsecount);
@@ -67,6 +70,14 @@ public class ImageBean implements Parcelable{
 
     public void setImageurl(String imageurl) {
         this.imageurl = imageurl;
+    }
+
+    public String getAddtime() {
+        return addtime;
+    }
+
+    public void setAddtime(String addtime) {
+        this.addtime = addtime;
     }
 
     public int getType() {

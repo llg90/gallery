@@ -11,16 +11,18 @@ import com.bumptech.glide.Glide;
 import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.MBaseAdapter;
+import com.wuhan.gallery.bean.ImageBean;
+import com.wuhan.gallery.net.SingletonNetServer;
 
 import java.util.List;
 
-class RecyclerGridAdapter extends MBaseAdapter<String> {
+class RecyclerGridAdapter extends MBaseAdapter<ImageBean> {
     private final static int sDimension10DP = (int) TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP, 10,
             GalleryApplication.getContext().getResources().getDisplayMetrics()
     );
 
-    RecyclerGridAdapter(@NonNull List<String> datas) {
+    RecyclerGridAdapter(@NonNull List<ImageBean> datas) {
         super(datas);
     }
 
@@ -42,7 +44,7 @@ class RecyclerGridAdapter extends MBaseAdapter<String> {
         } else {
             holder = (ViewHolder) convertView.getTag(R.id.tag_view_holder);
         }
-        String url = getItem(position);
+        String url = SingletonNetServer.sIMAGE_SERVER_HOST + getItem(position).getImageurl();
         Glide.with(parent).load(url).into(holder.mImageView);
         return convertView;
     }

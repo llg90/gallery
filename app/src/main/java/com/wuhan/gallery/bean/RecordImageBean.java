@@ -5,9 +5,9 @@ import java.util.List;
 public class RecordImageBean {
     private int type;
     private String time;
-    private List<String> urls;
+    private List<ImageBean> urls;
 
-    public RecordImageBean(int type, String time, List<String> url) {
+    public RecordImageBean(int type, String time, List<ImageBean> url) {
         super();
         this.type = type;
         this.time = time;
@@ -30,11 +30,11 @@ public class RecordImageBean {
         this.time = time;
     }
 
-    public List<String> getUrls() {
+    public List<ImageBean> getUrls() {
         return urls;
     }
 
-    public void setUrls(List<String> url) {
+    public void setUrls(List<ImageBean> url) {
         this.urls = url;
     }
 }
