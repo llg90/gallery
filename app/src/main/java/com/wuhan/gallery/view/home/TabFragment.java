@@ -41,11 +41,12 @@ public class TabFragment extends BaseLazyLoadFragment {
         SingletonNetServer.INSTANCE.getImageServer().getImagesByType(imageType)
                 .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetObserver<NetworkDataBean<List<ImageBean>>>(mLoadingDialog) {
+                .subscribe(new NetObserver<NetworkDataBean<List<ImageBean>>>(mLoadingDialog, mSmartRefreshLayout) {
                     @Override
                     public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
                         if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             List<ImageBean> data = listNetworkDataBean.getData();
+                            mImageData.clear();
                             mImageData.addAll(data);
                             mTabImageAdapter.notifyDataSetChanged();
                         }
@@ -87,7 +88,7 @@ public class TabFragment extends BaseLazyLoadFragment {
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                refreshLayout.finishRefresh();
+                getData();
             }
         });
     }
