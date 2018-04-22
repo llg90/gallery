@@ -59,7 +59,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void initView() {
-        findViewById(R.id.registerback_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.back_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -86,7 +86,7 @@ public class RegisterActivity extends BaseActivity {
                 mLoadingDialog = new LoadingDialog(this);
             }
 
-            SingletonNetServer.INSTANCE.getUserServer().register(name, pwd,email, telephone)
+            SingletonNetServer.INSTANCE.getUserServer().register(name, pwd, email, telephone)
                     .compose(this.<NetworkDataBean<Boolean>>bindToLifecycle())
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetObserver<NetworkDataBean<Boolean>>(mLoadingDialog){

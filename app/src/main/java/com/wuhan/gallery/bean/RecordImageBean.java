@@ -7,10 +7,11 @@ public class RecordImageBean {
     private String time;
     private List<String> urls;
 
-    public RecordImageBean(int type, String time, List<String> urls) {
+    public RecordImageBean(int type, String time, List<String> url) {
+        super();
         this.type = type;
         this.time = time;
-        this.urls = urls;
+        this.urls = url;
     }
 
     public int getType() {
@@ -33,7 +34,7 @@ public class RecordImageBean {
         return urls;
     }
 
-    public void setUrls(List<String> urls) {
-        this.urls = urls;
+    public void setUrls(List<String> url) {
+        this.urls = url;
     }
 }

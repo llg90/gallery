@@ -33,15 +33,16 @@ import io.reactivex.schedulers.Schedulers;
 
 public class HostFragment extends BaseLazyLoadFragment {
     //点击榜
-    private ArrayList<String> mLeaderBoardData = new ArrayList<>();
+    private ArrayList<ImageBean> mLeaderBoardData = new ArrayList<>();
     private HostImageAdapter mLeaderBoardAdapter;
 
     //猜你喜欢
-    private ArrayList<String> mLikeListData = new ArrayList<>();
+    private ArrayList<ImageBean> mLikeListData = new ArrayList<>();
     private HostImageAdapter mLikeListAdapter;
 
     //首页轮播
     private Banner mBanner;
+    private List<ImageBean> mBannerImage;
     private ArrayList<String> mBannerImageUrlData = new ArrayList<>();
 
 //    private ArrayList<ImageBean> mBannerData = new ArrayList<>();
@@ -52,33 +53,6 @@ public class HostFragment extends BaseLazyLoadFragment {
 
     @Override
     protected void getData() {
-
-/*      mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523471754721&di=ee50059c20a127535f3f4d216caaee6b&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fpic%2Fitem%2F9825bc315c6034a84e310db2c713495409237635.jpg");
-        mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523472017828&di=739f16b500e2832880621a58b5ccad80&imgtype=0&src=http%3A%2F%2Fimg1qn.moko.cc%2F2017-02-18%2F5ef4f3a3-8a8f-467e-befb-42e5d909ecce.jpg");
-        mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473066906&di=384be74479df524095d705084ef035c4&imgtype=0&src=http%3A%2F%2Fimgphoto.gmw.cn%2Fattachement%2Fjpg%2Fsite2%2F20160525%2Feca86bd9dc4718af3fd92e.jpg");
-        mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473083050&di=4cbed09a785cdc1345ddc83cdf3fccf5&imgtype=0&src=http%3A%2F%2Fwww.hinews.cn%2Fpic%2F0%2F18%2F18%2F24%2F18182489_999915.jpg");
-        mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473103543&di=43e6e704a7ec8d0b8f8b1355da50a780&imgtype=0&src=http%3A%2F%2Fwww.sinaimg.cn%2Fdy%2Fslidenews%2F4_img%2F2013_27%2F704_1015455_128499.jpg");
-        mLeaderBoardData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473120590&di=1ef8eba39675245f88c75eda99ce1763&imgtype=0&src=http%3A%2F%2Fimg4q.duitang.com%2Fuploads%2Fitem%2F201504%2F12%2F20150412H1731_RvmAa.thumb.700_0.jpeg");
-
-
-        mLikeListData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473370717&di=f35e71642ab80f2832c7c7b65a6c8386&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201605%2F08%2F20160508154653_AQavc.png");
-        mLikeListData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473389143&di=c70bea1fee94e9cf561c27696b2a602a&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Fa9d3fd1f4134970a35788b9597cad1c8a7865d04.jpg");
-        mLikeListData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524068141&di=f65d5e727d1d3c38afed003196b19dd0&imgtype=jpg&er=1&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201504%2F20%2F20150420H3909_hGtBL.jpeg");
-        mLikeListData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473478109&di=584e790a0107e39d7b45642b23a47211&imgtype=0&src=http%3A%2F%2Fwww.71lady.com%2Fuploads%2Fallimg%2F140812%2F2-140Q2162642.jpg");
-        mLikeListData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473495261&di=c625fa6fdb38eb7c1e63081f059c2591&imgtype=0&src=http%3A%2F%2Fimg3.yxlady.com%2Fyl%2FUploadFiles_5361%2F2014063%2F2014060323325904.jpg");
-        mLikeListData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473519623&di=5da8e7cadcec118dfb5ff7a5675c0617&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fw%3D580%2Fsign%3D3e3a0afb31d12f2ece05ae687fc3d5ff%2F8eac339b033b5bb58c3c4bd231d3d539b700bc4f.jpg");
-        mLikeListData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473546429&di=f6c64b913ef18967b810ce7c202b8f5d&imgtype=0&src=http%3A%2F%2Fww1.sinaimg.cn%2Forj480%2F9b3dfba1gw1f3a8plwqtej20qo13kti7.jpg");
-
-        mCircleImageUrlData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523471754721&di=ee50059c20a127535f3f4d216caaee6b&imgtype=0&src=http%3A%2F%2Fa.hiphotos.baidu.com%2Fbaike%2Fpic%2Fitem%2F9825bc315c6034a84e310db2c713495409237635.jpg");
-        mCircleImageUrlData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523472017828&di=739f16b500e2832880621a58b5ccad80&imgtype=0&src=http%3A%2F%2Fimg1qn.moko.cc%2F2017-02-18%2F5ef4f3a3-8a8f-467e-befb-42e5d909ecce.jpg");
-        mCircleImageUrlData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473066906&di=384be74479df524095d705084ef035c4&imgtype=0&src=http%3A%2F%2Fimgphoto.gmw.cn%2Fattachement%2Fjpg%2Fsite2%2F20160525%2Feca86bd9dc4718af3fd92e.jpg");
-        mCircleImageUrlData.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523473083050&di=4cbed09a785cdc1345ddc83cdf3fccf5&imgtype=0&src=http%3A%2F%2Fwww.hinews.cn%2Fpic%2F0%2F18%2F18%2F24%2F18182489_999915.jpg");
-
-        mLeaderBoardAdapter.notifyDataSetChanged();
-        mLikeListAdapter.notifyDataSetChanged();
-        mBanner.setImages(mCircleImageUrlData);
-        mBanner.start();*/
-
 
         if (mLoadingDialog == null) {
             mLoadingDialog = new LoadingDialog(getContext());
@@ -95,7 +69,7 @@ public class HostFragment extends BaseLazyLoadFragment {
                             List<ImageBean> banner = data.getMaxlist();
                             List<ImageBean> topclick   = data.getClicklist();
                             if (banner != null) {
-
+                                mBannerImage = banner;
                                 for (ImageBean imageBean : banner){
                                     String url = SingletonNetServer.sIMAGE_SERVER_HOST + imageBean.getImageurl();
                                     mBannerImageUrlData.add(url);
@@ -105,14 +79,7 @@ public class HostFragment extends BaseLazyLoadFragment {
                             }
 
                             if (topclick != null) {
-                                int i = 0;
-                                for (ImageBean imageBean : topclick)
-                                {
-                                    String url = SingletonNetServer.sIMAGE_SERVER_HOST + imageBean.getImageurl();
-                                    mLeaderBoardData.add(url);
-                                    i++;
-                                    if (i == 8) break;
-                                }
+                                mLeaderBoardData.addAll(topclick);
                                 mLeaderBoardAdapter.notifyDataSetChanged();
                             }
                         }
@@ -147,8 +114,7 @@ public class HostFragment extends BaseLazyLoadFragment {
             public void OnItemClick(View itemView, int position) {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
                 intent.putExtra("position", position);
-//                intent.putParcelableArrayListExtra("images", mLeaderBoardData);
-                intent.putStringArrayListExtra("urls", (ArrayList<String>)mLeaderBoardData);
+                intent.putParcelableArrayListExtra("images", mLeaderBoardData);
                 ActivityOptionsCompat activityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(itemView, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
@@ -165,7 +131,7 @@ public class HostFragment extends BaseLazyLoadFragment {
             public void OnItemClick(View itemView, int position) {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
                 intent.putExtra("position", position);
-               intent.putStringArrayListExtra("urls", (ArrayList<String>) mLikeListData);
+                intent.putParcelableArrayListExtra("images", mLikeListData);
                 ActivityOptionsCompat activityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(itemView, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
@@ -173,8 +139,6 @@ public class HostFragment extends BaseLazyLoadFragment {
         });
         likeListView.setAdapter(mLikeListAdapter);
 
-//        private Banner mBanner;
-//        private ArrayList<ImageBean> mBannerImageUrlData = new ArrayList<>();
         mBanner = contentView.findViewById(R.id.banner_view);
         mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
         mBanner.setIndicatorGravity(BannerConfig.RIGHT);
@@ -184,12 +148,10 @@ public class HostFragment extends BaseLazyLoadFragment {
             @Override
             public void OnBannerClick(int position) {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
-                ArrayList<String> urls = new ArrayList<>();
-                urls.add(mBannerImageUrlData.get(position));
-                intent.putStringArrayListExtra("urls", urls);
-//                ArrayList<ImageBean> imageBeans = new ArrayList<>();
-//                imageBeans.add(mBannerImageUrlData.get(position));
-//                intent.putParcelableArrayListExtra("images", imageBeans);
+                ArrayList<ImageBean> imageBeans = new ArrayList<>();
+                imageBeans.add(mBannerImage.get(position));
+                intent.putExtra("position", position);
+                intent.putParcelableArrayListExtra("images", imageBeans);
 
                 ActivityOptionsCompat activityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create((View)mBanner, "image"));

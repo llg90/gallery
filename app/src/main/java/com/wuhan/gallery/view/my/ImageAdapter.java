@@ -10,14 +10,16 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.wuhan.gallery.R;
+import com.wuhan.gallery.bean.ImageBean;
+import com.wuhan.gallery.net.SingletonNetServer;
 
 import java.util.List;
 
-public class MyFragmentImageAdapter extends RecyclerView.Adapter {
+class ImageAdapter extends RecyclerView.Adapter {
     private Fragment mFragment;
-    private List<String> urls;
+    private List<ImageBean> urls;
 
-    public MyFragmentImageAdapter(Fragment fragment, @NonNull List<String> urls) {
+    ImageAdapter(Fragment fragment, @NonNull List<ImageBean> urls) {
         mFragment = fragment;
         this.urls = urls;
     }
@@ -30,7 +32,7 @@ public class MyFragmentImageAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        String url = urls.get(position);
+        String url = SingletonNetServer.sIMAGE_SERVER_HOST + urls.get(position).getImageurl();
         Glide.with(mFragment).load(url).into((ImageView) holder.itemView);
     }
 

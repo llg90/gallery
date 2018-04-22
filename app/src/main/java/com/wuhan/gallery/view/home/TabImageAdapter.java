@@ -10,13 +10,15 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.MBaseAdapter;
+import com.wuhan.gallery.bean.ImageBean;
+import com.wuhan.gallery.net.SingletonNetServer;
 
 import java.util.List;
 
-class TabImageAdapter extends MBaseAdapter<String> {
+class TabImageAdapter extends MBaseAdapter<ImageBean> {
     private Fragment mFragment;
 
-    TabImageAdapter(Fragment fragment, @NonNull List<String> datas) {
+    TabImageAdapter(Fragment fragment, @NonNull List<ImageBean> datas) {
         super(datas);
         mFragment = fragment;
     }
@@ -33,7 +35,7 @@ class TabImageAdapter extends MBaseAdapter<String> {
             holder = (ViewHolder) convertView.getTag(R.id.tag_view_holder);
         }
 
-        String url = getItem(position);
+        String url = SingletonNetServer.sIMAGE_SERVER_HOST + getItem(position).getImageurl();
         Glide.with(mFragment).load(url).into(holder.image);
         return convertView;
     }
@@ -41,7 +43,7 @@ class TabImageAdapter extends MBaseAdapter<String> {
     static class ViewHolder {
         ImageView image;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             image = v.findViewById(R.id.image_view);
         }
     }

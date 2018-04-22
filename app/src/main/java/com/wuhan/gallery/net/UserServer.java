@@ -23,6 +23,16 @@ public interface UserServer {
 
     @FormUrlEncoded
     @POST("user/register")
-    Observable<NetworkDataBean<Boolean>> register(@Field("username") String name, @Field("password") String password,
-                                         @Field("email") String email, @Field("telephone") String telephone);
+    Observable<NetworkDataBean<Boolean>> register(@Field("username") String name,
+                                                  @Field("password") String password,
+                                                  @Field("email") String email,
+                                                  @Field("telephone") String telephone);
+
+    @FormUrlEncoded
+    @POST("user/update")
+    Observable<NetworkDataBean<UserBean>> upUserInfo(@Field("id") int id,
+                                                     @Field("username") String name,
+                                                     @Field("telephone") String phone,
+                                                     @Field("email") String email);
+    
 }

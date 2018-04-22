@@ -27,7 +27,7 @@ import static com.wuhan.gallery.GalleryApplication.getContext;
 
 class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder> {
     private Fragment mFragment;
-    private List<String> mImageUrls;
+    private List<ImageBean> mImageUrls;
     private OnItemClickListener mOnClickListener;
 
     interface  OnItemClickListener {
@@ -38,7 +38,7 @@ class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder>
         mOnClickListener = onClickListener;
     }
 
-    HostImageAdapter(Fragment fragment, List<String> imageUrls) {
+    HostImageAdapter(Fragment fragment, List<ImageBean> imageUrls) {
         mFragment = fragment;
         mImageUrls = imageUrls;
     }
@@ -66,7 +66,13 @@ class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder>
 
         int roundingRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 10, Resources.getSystem().getDisplayMetrics());
-        Glide.with(mFragment).load(mImageUrls.get(position))
+/*        Glide.with(mFragment).load(mImageUrls.get(position))
+                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(roundingRadius)))
+                .into(holder.mImageView);*/
+
+
+        String url = SingletonNetServer.sIMAGE_SERVER_HOST + mImageUrls.get(position).getImageurl();
+        Glide.with(mFragment).load(url)
                 .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(roundingRadius)))
                 .into(holder.mImageView);
     }

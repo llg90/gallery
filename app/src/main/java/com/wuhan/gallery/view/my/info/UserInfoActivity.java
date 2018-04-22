@@ -52,6 +52,7 @@ public class UserInfoActivity extends BaseActivity {
 
     private LoadingDialog mLoadingDialog;
 
+    private static final int REQUEST_CODE_ITEM = 9;
     private static final int REQUEST_CODE_CHOOSE = 10;
 
     @Override
@@ -138,7 +139,7 @@ public class UserInfoActivity extends BaseActivity {
                 File iconFile = new File(path);
                 MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
                 builder.addFormDataPart("picture", iconFile.getName(), RequestBody.create(MediaType.parse("image/*"), iconFile));
-                builder.addFormDataPart("id", GalleryApplication.getUserBean().getId() + "");
+                builder.addFormDataPart("id", String.valueOf(GalleryApplication.getUserBean().getId()));
                 if (mLoadingDialog == null){
                    mLoadingDialog = new LoadingDialog(this);
                }
@@ -159,6 +160,21 @@ public class UserInfoActivity extends BaseActivity {
                             }
                         });
             }
+        } else if (requestCode == REQUEST_CODE_ITEM && resultCode == RESULT_OK) {
+            UserBean userBean = GalleryApplication.getContext().getUserBean();
+            if (userBean != null) {
+                String url = SingletonNetServer.sIMAGE_SERVER_HOST + userBean.getIcon();
+                Glide.with(this).load(url).apply(new RequestOptions().circleCrop()).into(mUserIcon);
+
+                String name = userBean.getUsername();
+                mNameText.setText(name==null?"":name);
+
+                String phone = userBean.getTelephone();
+                mPhoneText.setText(phone==null?"":phone);
+
+                String email = userBean.getEmail();
+                mEmailText.setText(email==null?"":email);
+            }
         }
     }
 
@@ -172,21 +188,24 @@ public class UserInfoActivity extends BaseActivity {
                     break;
                 case R.id.user_name_button:
                     intent.setClass(UserInfoActivity.this, ModifyInfoItemActivity.class);
+                    intent.putExtra("type", 0);
                     intent.putExtra("name", "用户名：");
                     intent.putExtra("hint", mNameText.getText().toString());
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_ITEM);
                     break;
                 case R.id.phone_button:
                     intent.setClass(UserInfoActivity.this, ModifyInfoItemActivity.class);
+                    intent.putExtra("type", 1);
                     intent.putExtra("name", "电话号码：");
                     intent.putExtra("hint", mPhoneText.getText().toString());
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_ITEM);
                     break;
                 case R.id.email_button:
                     intent.setClass(UserInfoActivity.this, ModifyInfoItemActivity.class);
+                    intent.putExtra("type", 2);
                     intent.putExtra("name", "邮箱：");
                     intent.putExtra("hint", mEmailText.getText().toString());
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_ITEM);
                     break;
                 case R.id.password_button:
                     intent.setClass(UserInfoActivity.this, ModifyPasswordActivity.class);
