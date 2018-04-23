@@ -95,26 +95,10 @@ public class RegisterActivity extends BaseActivity {
                         public void onNext(NetworkDataBean<Boolean> booleanNetworkDataBean) {
                             if (booleanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)){
                                 Toast.makeText(RegisterActivity.this, booleanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                         }
                     });
-
-//                            SingletonNetServer.INSTANCE.getUserServer().login(name, password)
-//                                    .compose(this.<NetworkDataBean<UserBean>>bindToLifecycle())
-//                                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-//                                    .subscribe(new NetObserver<NetworkDataBean<UserBean>>(mLoadingDialog) {
-//                                        @Override
-//                                        public void onNext(NetworkDataBean<UserBean> userBeanNetworkDataBean) {
-//                                            if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
-//                                                UserBean data = userBeanNetworkDataBean.getData();
-//                                                GalleryApplication.getContext().setUserBean(data);
-//                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//                                            } else {
-//                                                Toast.makeText(LoginActivity.this, userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
-//                                            }
-//                                        }
-//                                    });
-
         }
     }
 }

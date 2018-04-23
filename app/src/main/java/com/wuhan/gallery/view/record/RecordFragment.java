@@ -53,18 +53,23 @@ public class RecordFragment extends BaseLazyLoadFragment {
                         if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             mRecordImageBeans.clear();
                             List<ImageBean> imageBeans = listNetworkDataBean.getData();
-                            String time = imageBeans.get(0).getAddtime();
-                            int position = 1;
-                            mRecordImageBeans.add(new RecordImageBean(0,time, null));
-                            mRecordImageBeans.add(new RecordImageBean(1,time, new ArrayList<ImageBean>()));
-                            for (ImageBean item : imageBeans) {
-                                if (item.getAddtime().equals(time)) {
-                                    mRecordImageBeans.get(position).getUrls().add(item);
-                                } else {
-                                    position+=2;
-                                    mRecordImageBeans.add(new RecordImageBean(0,time, null));
-                                    mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+                            if (imageBeans.size() > 0){
+                                String time = imageBeans.get(0).getAddtime();
+                                int position = 1;
+                                mRecordImageBeans.add(new RecordImageBean(0,time, null));
+                                mRecordImageBeans.add(new RecordImageBean(1,time, new ArrayList<ImageBean>()));
+                                for (ImageBean item : imageBeans) {
+                                    if (item.getAddtime().equals(time)) {
+                                        mRecordImageBeans.get(position).getUrls().add(item);
+                                    } else {
+                                        position += 2;
+                                        mRecordImageBeans.add(new RecordImageBean(0,time, null));
+                                        mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+                                    }
                                 }
+                            }
+                            else{
+                                mRecordImageBeans.add(new RecordImageBean(0,null, null));
                             }
                             mRecordImageRecyclerAdapter.notifyDataSetChanged();
                         }
