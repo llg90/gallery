@@ -19,7 +19,7 @@ public interface ImageServer {
     Observable<NetworkDataBean<HostDataBean>> clicktopload(@Query("id") int id);
 
     @GET("execute/images")
-    Observable<NetworkDataBean<List<ImageBean>>> getImagesByType(@Query("type") int type);
+    Observable<NetworkDataBean<List<ImageBean>>> getImagesByType(@Query("type") int type, @Query("pagecount") int page);
 
     @FormUrlEncoded
     @POST("execute/browse")

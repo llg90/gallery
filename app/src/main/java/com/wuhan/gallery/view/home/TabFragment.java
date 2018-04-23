@@ -33,12 +33,12 @@ public class TabFragment extends BaseLazyLoadFragment {
     private TabImageAdapter mTabImageAdapter;
     private LoadingDialog mLoadingDialog;
 
+    private int mPage;
+    private int mType;
+
     @Override
     protected void getData() {
-        Bundle bundle = getArguments();
-        if (bundle == null) return;
-        int imageType = getArguments().getInt("type", 0);
-        SingletonNetServer.INSTANCE.getImageServer().getImagesByType(imageType)
+        SingletonNetServer.INSTANCE.getImageServer().getImagesByType(mType, mPage)
                 .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetObserver<NetworkDataBean<List<ImageBean>>>(mLoadingDialog, mSmartRefreshLayout) {
@@ -46,9 +46,9 @@ public class TabFragment extends BaseLazyLoadFragment {
                     public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
                         if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             List<ImageBean> data = listNetworkDataBean.getData();
-                            mImageData.clear();
                             mImageData.addAll(data);
                             mTabImageAdapter.notifyDataSetChanged();
+                            mPage++;
                         }
                     }
                 });
@@ -61,6 +61,11 @@ public class TabFragment extends BaseLazyLoadFragment {
 
     @Override
     protected void initView(View convertView) {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mType = getArguments().getInt("type", 0);
+        }
+
         mLoadingDialog = new LoadingDialog(getContext());
         mSmartRefreshLayout    = convertView.findViewById(R.id.refresh_layout);
         GridView imageGridView = convertView.findViewById(R.id.image_grid_view);
@@ -83,11 +88,14 @@ public class TabFragment extends BaseLazyLoadFragment {
         mSmartRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                refreshLayout.finishLoadMore();
+                getData();
             }
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                mPage = 0;
+                mImageData.clear();
+                mTabImageAdapter.notifyDataSetChanged();
                 getData();
             }
         });
