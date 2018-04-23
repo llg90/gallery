@@ -24,11 +24,11 @@ public interface ImageServer {
     @FormUrlEncoded
     @POST("execute/browse")
     Observable<NetworkDataBean<List<ImageBean>>> getImageBrowse(@Field("id") int userId,
-                                                                @Field("status") int status);  //1为浏览，2为收藏，3为点
+                                                                @Field("status") int status);  //1为浏览，2为收藏，3为点赞
 
     @FormUrlEncoded
     @POST("execute/add")
     Observable<NetworkDataBean<Boolean>> setImageStatus(@Field("userid") int userId,
                                                         @Field("imagesid") int imagesId,
-                                                        @Field("status") int status);//1为浏览，2为收藏，3为点
+                                                        @Field("status") int status);//1为浏览，2为收藏，3为点赞
 }

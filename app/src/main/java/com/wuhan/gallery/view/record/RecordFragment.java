@@ -54,7 +54,7 @@ public class RecordFragment extends BaseLazyLoadFragment {
                             List<ImageBean> data = listNetworkDataBean.getData();
                             String time = data.get(0).getAddtime();
                             int position = 1;
-                            mRecordImageBeans.add(new RecordImageBean(0, time, null));
+                            mRecordImageBeans.add(new RecordImageBean(0,time, null));
                             mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
                             for (ImageBean item : data) {
                                 if (item.getAddtime().equals(time)) {
