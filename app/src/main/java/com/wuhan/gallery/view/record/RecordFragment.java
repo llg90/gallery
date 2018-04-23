@@ -20,7 +20,6 @@ import com.wuhan.gallery.net.NetObserver;
 import com.wuhan.gallery.net.SingletonNetServer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
