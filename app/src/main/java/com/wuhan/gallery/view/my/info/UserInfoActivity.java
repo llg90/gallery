@@ -1,7 +1,9 @@
 package com.wuhan.gallery.view.my.info;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.net.Uri;
@@ -94,6 +96,10 @@ public class UserInfoActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 GalleryApplication.setUserBean(null);
+                SharedPreferences sp = getSharedPreferences("gallery", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.clear();
+                editor.commit();
                 finish();
             }
         });

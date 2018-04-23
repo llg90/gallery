@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -51,12 +52,12 @@ public class RecordFragment extends BaseLazyLoadFragment {
                     public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
                         if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             mRecordImageBeans.clear();
-                            List<ImageBean> data = listNetworkDataBean.getData();
-                            String time = data.get(0).getAddtime();
+                            List<ImageBean> imageBeans = listNetworkDataBean.getData();
+                            String time = imageBeans.get(0).getAddtime();
                             int position = 1;
-                            mRecordImageBeans.add(new RecordImageBean(0,"2018-04-16", null));
-                            mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
-                            for (ImageBean item : data) {
+                            mRecordImageBeans.add(new RecordImageBean(0,time, null));
+                            mRecordImageBeans.add(new RecordImageBean(1,time, new ArrayList<ImageBean>()));
+                            for (ImageBean item : imageBeans) {
                                 if (item.getAddtime().equals(time)) {
                                     mRecordImageBeans.get(position).getUrls().add(item);
                                 } else {
