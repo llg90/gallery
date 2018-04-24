@@ -8,9 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by liligang on 2018/3/25.
- */
+
 
 public abstract class BaseLazyLoadFragment extends BaseFragment {
     protected boolean isVisible = false;    //当前Fragment是否可见

@@ -1,12 +1,15 @@
 package com.wuhan.gallery.view.home;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
@@ -37,6 +40,12 @@ public class HomeFragment extends BaseLazyLoadFragment {
     @Override
     public void onResume() {
         super.onResume();
+      //  mContentPagerView.setCurrentItem(0);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
         mContentPagerView.setCurrentItem(0);
     }
 
@@ -45,13 +54,13 @@ public class HomeFragment extends BaseLazyLoadFragment {
         mTabLayoutView = convertView.findViewById(R.id.tab_layout_view);
         mContentPagerView = convertView.findViewById(R.id.content_pager_view);
 
-        for (int count=0, length = mTabTexts.length; count<length; count++) {
+        for (int count = 0, length = mTabTexts.length; count < length; count++) {
             mTabLayoutView.addTab(mTabLayoutView.newTab().setText(mTabTexts[count]));
             if (count == 0) {
                 mFragments.add(new HostFragment());
             } else {
                 ImageTypeEnum imageType = ImageTypeEnum.getOfValue(count);
-                int imageTypeValue = imageType==null?0:imageType.getValue();
+                int imageTypeValue = imageType == null ? 0 : imageType.getValue();
                 BaseLazyLoadFragment fragment = new TabFragment();
                 Bundle bundle = new Bundle();
                 bundle.putInt("type", imageTypeValue);

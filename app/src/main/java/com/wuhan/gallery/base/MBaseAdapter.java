@@ -5,12 +5,7 @@ import android.widget.BaseAdapter;
 
 import java.util.List;
 
-/**
- * @author: 李利刚
- * @E-mail: lgzc_work@163.com
- * @date: 2018-04-12 14:26
- * @describe:
- */
+
 public abstract class MBaseAdapter<T> extends BaseAdapter {
     private List<T> mDatas;
 

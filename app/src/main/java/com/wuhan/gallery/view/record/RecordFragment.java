@@ -25,12 +25,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * @author: 李利刚
- * @E-mail: lgzc_work@163.com
- * @date: 2018-04-11 17:06
- * @describe:
- */
+
 public class RecordFragment extends BaseLazyLoadFragment {
     private SmartRefreshLayout mRefreshLayout;
     private RecyclerView mImageRecyclerView;

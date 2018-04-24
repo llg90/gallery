@@ -7,9 +7,7 @@ import android.view.WindowManager;
 
 import com.wuhan.gallery.GalleryApplication;
 
-/**
- * Created by asdzheng on 2015/12/28.
- */
+
 public class DisplayUtils {
 
     public static int dpToPx(final float n, final Context context) {

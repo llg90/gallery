@@ -60,15 +60,15 @@ public class TabFragment extends BaseLazyLoadFragment {
     }
 
     @Override
-    protected void initView(View convertView) {
+    protected void initView(View contentView) {
         Bundle bundle = getArguments();
         if (bundle != null) {
             mType = getArguments().getInt("type", 0);
         }
 
         mLoadingDialog = new LoadingDialog(getContext());
-        mSmartRefreshLayout    = convertView.findViewById(R.id.refresh_layout);
-        GridView imageGridView = convertView.findViewById(R.id.image_grid_view);
+        mSmartRefreshLayout    = contentView.findViewById(R.id.refresh_layout);
+        GridView imageGridView = contentView.findViewById(R.id.image_grid_view);
 
         mTabImageAdapter = new TabImageAdapter(this, mImageData);
         imageGridView.setAdapter(mTabImageAdapter);
