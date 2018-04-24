@@ -46,20 +46,19 @@ public class RecordFragment extends BaseLazyLoadFragment {
                         if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                             mRecordImageBeans.clear();
                             List<ImageBean> data = listNetworkDataBean.getData();
-                            int position = 1;
                             String time = data.get(0).getAddtime();
+                            int position = 1;
                             mRecordImageBeans.add(new RecordImageBean(0,time, null));
                             mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
                             for (ImageBean item : data) {
-                                String itemTime = item.getAddtime();
-                                if (itemTime.equals(time)) {
+                                if (item.getAddtime().equals(time)) {
                                     mRecordImageBeans.get(position).getUrls().add(item);
                                 } else {
-                                    position+=2;
-                                    time = itemTime;
+                                    position += 2;
                                     mRecordImageBeans.add(new RecordImageBean(0,time, null));
                                     mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
                                 }
+                                time = item.getAddtime();
                             }
                             mRecordImageRecyclerAdapter.notifyDataSetChanged();
                         }
