@@ -79,7 +79,7 @@ public class ImageDetailsActivity extends BaseActivity {
                         @Override
                         public void onClick(View v) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                finishAfterTransition();
+                                finishAfterTransition();            //点击图片周围，退回
                             } else {
                                 finish();
                             }

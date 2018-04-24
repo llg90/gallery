@@ -115,6 +115,7 @@ public class HostFragment extends BaseLazyLoadFragment {
 
     @Override
     protected void initView(View contentView) {
+
         Drawable decorationDrawable;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider, getContext().getTheme());
