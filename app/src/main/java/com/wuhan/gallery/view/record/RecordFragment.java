@@ -58,6 +58,7 @@ public class RecordFragment extends BaseLazyLoadFragment {
                                     mRecordImageBeans.add(new RecordImageBean(0,time, null));
                                     mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
                                 }
+                                time = item.getAddtime();
                             }
                             mRecordImageRecyclerAdapter.notifyDataSetChanged();
                         }
