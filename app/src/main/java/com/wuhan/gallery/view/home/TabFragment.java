@@ -12,10 +12,12 @@ import android.widget.GridView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
+import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
 import com.wuhan.gallery.bean.ImageBean;
 import com.wuhan.gallery.bean.NetworkDataBean;
+import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.net.NetObserver;
 import com.wuhan.gallery.net.SingletonNetServer;
 import com.wuhan.gallery.view.comm.ImageDetailsActivity;
@@ -38,7 +40,9 @@ public class TabFragment extends BaseLazyLoadFragment {
 
     @Override
     protected void getData() {
-        SingletonNetServer.INSTANCE.getImageServer().getImagesByType(mType, mPage)
+        UserBean userBean = GalleryApplication.getUserBean();
+        int userId = userBean!=null?userBean.getId():0;
+        SingletonNetServer.INSTANCE.getImageServer().getImagesByType(mType, mPage,userId)
                 .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetObserver<NetworkDataBean<List<ImageBean>>>(mLoadingDialog, mSmartRefreshLayout) {
