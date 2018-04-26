@@ -123,7 +123,7 @@ public class ImageDetailsActivity extends BaseActivity {
                         @Override
                         public boolean onLongClick(View v) {
                             reserve_tv.setVisibility(View.VISIBLE);
-                            Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
                             return true;
                         }
                     });
