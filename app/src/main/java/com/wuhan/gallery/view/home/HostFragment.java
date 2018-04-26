@@ -61,7 +61,7 @@ public class HostFragment extends BaseLazyLoadFragment {
         }
 
         UserBean userBean = GalleryApplication.getUserBean();
-        int id = userBean==null?0:userBean.getId();
+        int id = userBean == null ? 0 : userBean.getId();
         SingletonNetServer.INSTANCE.getImageServer().clicktopload(id)
                 .compose(this.<NetworkDataBean<HostDataBean>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
