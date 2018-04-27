@@ -69,6 +69,7 @@ public class HomeFragment extends BaseLazyLoadFragment {
             }
         }
 
+        //为ViewPager设置适配器
         mContentPagerView.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -87,6 +88,21 @@ public class HomeFragment extends BaseLazyLoadFragment {
             }
         });
 
+        //将TagLayout与ViewPager相关联
         mTabLayoutView.setupWithViewPager(mContentPagerView);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

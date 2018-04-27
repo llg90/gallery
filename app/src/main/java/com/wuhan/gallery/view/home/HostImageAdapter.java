@@ -26,6 +26,7 @@ import java.util.List;
 import static com.wuhan.gallery.GalleryApplication.getContext;
 
 class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder> {
+
     private Fragment mFragment;
     private List<ImageBean> mImageUrls;
     private OnItemClickListener mOnClickListener;

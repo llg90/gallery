@@ -123,11 +123,15 @@ public class HostFragment extends BaseLazyLoadFragment {
             decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider);
         }
 
+        //点击榜
         RecyclerView leaderBoardListView = contentView.findViewById(R.id.leader_board_list_view);
+        //设置布局管理器，并设为水平
         leaderBoardListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        //设置分隔线
         DividerItemDecoration itemDecoration = new DividerItemDecoration(leaderBoardListView.getContext(), LinearLayoutManager.HORIZONTAL);
         itemDecoration.setDrawable(decorationDrawable);
         leaderBoardListView.addItemDecoration(itemDecoration);
+        //新建配适器
         mLeaderBoardAdapter = new HostImageAdapter(this, mLeaderBoardData);
         mLeaderBoardAdapter.setOnClickListener(new HostImageAdapter.OnItemClickListener() {
             @Override
@@ -142,8 +146,12 @@ public class HostFragment extends BaseLazyLoadFragment {
         });
         leaderBoardListView.setAdapter(mLeaderBoardAdapter);
 
+
+        //猜你喜欢
         RecyclerView likeListView = contentView.findViewById(R.id.like_list_view);
+        //设置布局管理器，并设为水平
         likeListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        //设置分隔线（与点击榜的样式一致）
         likeListView.addItemDecoration(itemDecoration);
         mLikeListAdapter = new HostImageAdapter(this, mLikeListData);
         mLikeListAdapter.setOnClickListener(new HostImageAdapter.OnItemClickListener() {
@@ -160,10 +168,15 @@ public class HostFragment extends BaseLazyLoadFragment {
         likeListView.setAdapter(mLikeListAdapter);
 
         mBanner = contentView.findViewById(R.id.banner_view);
-        mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);
-        mBanner.setIndicatorGravity(BannerConfig.RIGHT);
+        //设置banner的样式
+        mBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR);  //BannerConfig.CIRCLE_INDICATOR
+        //设置设置指示器位置
+        mBanner.setIndicatorGravity(BannerConfig.CENTER);
+        //设置图片加载器
         mBanner.setImageLoader(new GlideImageLoader());
+        //设置动画轮播效果
         mBanner.setBannerAnimation(Transformer.Stack);
+        //设置轮播的监听器
         mBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {

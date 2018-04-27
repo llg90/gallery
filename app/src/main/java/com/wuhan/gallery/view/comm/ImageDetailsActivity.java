@@ -118,20 +118,27 @@ public class ImageDetailsActivity extends BaseActivity {
                         }
                     });
 
-                    view.setOnLongClickListener(new View.OnLongClickListener() {
-
-                        @Override
-                        public boolean onLongClick(View v) {
-                            reserve_tv.setVisibility(View.VISIBLE);
-                           // Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
-                            return true;
-                        }
-                    });
 
                     String url = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(position).getImageurl();
                     Picasso.get().load(url).into(view);
                     mCacheView.put(position, view);
+
+                    //Bitmap bitmap = (mCacheView.get(viewPager.getCurrentItem())).getDrawingCache(true);
+                    Bitmap bitmap = convertViewToBitmap(mCacheView.get(viewPager.getCurrentItem()));
+                    if (bitmap == null){
+                        Toast.makeText(ImageDetailsActivity.this, "biymap_1为空", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
+                view.setOnLongClickListener(new View.OnLongClickListener() {
+
+                    @Override
+                    public boolean onLongClick(View v) {
+                        reserve_tv.setVisibility(View.VISIBLE);
+                        // Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
 
                 container.addView(view);
                 return view;
@@ -174,18 +181,21 @@ public class ImageDetailsActivity extends BaseActivity {
         mLikeCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
         mCollectCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
       //mDownloadCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
-        reserve_tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bitmap bitmap = (mCacheView.get(viewPager.getCurrentItem())).getDrawingCache();
-                String imageFilePath = saveBitmap(getBaseContext(), bitmap);
-                if (imageFilePath != null){
-                    Toast.makeText(getApplicationContext(), "图片保存至" + imageFilePath, Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getApplicationContext(), "图片保存失败", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        reserve_tv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                String imageurl = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(mPosition).getImageurl();
+////                Bitmap bitmap= BitmapFactory.decodeFile(imageurl);
+//                Bitmap bitmap = (mCacheView.get(viewPager.getCurrentItem())).getDrawingCache();
+//                String imageFilePath = saveBitmap(getBaseContext(), bitmap);
+//                if (imageFilePath != null){
+//                    Toast.makeText(getApplicationContext(), "图片保存至" + imageFilePath, Toast.LENGTH_SHORT).show();
+//                }else{
+//                    Toast.makeText(getApplicationContext(), "图片保存失败", Toast.LENGTH_SHORT).show();
+//                }
+//                reserve_tv.setVisibility(View.INVISIBLE);
+//            }
+//        });
 
 
         //浏览之后提交浏览状态
@@ -207,6 +217,7 @@ public class ImageDetailsActivity extends BaseActivity {
                         }
                     });
         }
+
 
     }
 
@@ -235,6 +246,8 @@ public class ImageDetailsActivity extends BaseActivity {
                                     }
                                 }
                             });
+
+
                 }
             }
 
@@ -242,7 +255,28 @@ public class ImageDetailsActivity extends BaseActivity {
     };
 
 
-    public static String saveBitmap(Context context, Bitmap mBitmap) {
+
+    public static Bitmap convertViewToBitmap(View view){
+
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+        view.buildDrawingCache();
+
+        Bitmap bitmap=view.getDrawingCache();
+
+        return bitmap;
+
+    }
+
+
+    public String saveBitmap(Context context, Bitmap mBitmap) {
+
+//        if (mBitmap == null){
+//            //Toast.makeText(getApplicationContext(), "图为空", Toast.LENGTH_SHORT).show();
+//        }
+
         String savePath;
         File filePic;
         if (Environment.getExternalStorageState().equals(
@@ -260,7 +294,7 @@ public class ImageDetailsActivity extends BaseActivity {
                 filePic.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(filePic);
-            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+          //  mBitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
             fos.flush();
             fos.close();
         } catch (IOException e) {
