@@ -27,6 +27,7 @@ public class LoginActivity extends BaseActivity {
     private EditText mUserNameEt;
     private EditText mPasswordEt;
 
+
     private LoadingDialog mLoadingDialog;
 
     @Override
@@ -76,7 +77,9 @@ public class LoginActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(password)) {
             Toast.makeText(this, "密码为空", Toast.LENGTH_SHORT).show();
         } else {
-            SharedPreferences sharedPreferences = getSharedPreferences("gallery", Context.MODE_PRIVATE);
+            //记住用户的登录
+            SharedPreferences sharedPreferences =
+                    getSharedPreferences("gallery", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("name", name);
             editor.putString("password", password);
@@ -92,13 +95,15 @@ public class LoginActivity extends BaseActivity {
                     .subscribe(new NetObserver<NetworkDataBean<UserBean>>(mLoadingDialog) {
                         @Override
                         public void onNext(NetworkDataBean<UserBean> userBeanNetworkDataBean) {
-                            if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
-                                UserBean data = userBeanNetworkDataBean.getData();
-                                GalleryApplication.getContext().setUserBean(data);
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            } else {
-                                Toast.makeText(LoginActivity.this, userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
+                        if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                            UserBean data = userBeanNetworkDataBean.getData();
+                            GalleryApplication.getContext().setUserBean(data);
+                            startActivity(new Intent(
+                                    LoginActivity.this, MainActivity.class));
+                        } else {
+                            Toast.makeText(LoginActivity.this,
+                                    userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                         }
                     });
         }

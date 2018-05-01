@@ -50,9 +50,9 @@ public class HomeFragment extends BaseLazyLoadFragment {
     }
 
     @Override
-    protected void initView(View convertView) {
-        mTabLayoutView = convertView.findViewById(R.id.tab_layout_view);
-        mContentPagerView = convertView.findViewById(R.id.content_pager_view);
+    protected void initView(View contentView) {
+        mTabLayoutView = contentView.findViewById(R.id.tab_layout_view);
+        mContentPagerView = contentView.findViewById(R.id.content_pager_view);
 
         for (int count = 0, length = mTabTexts.length; count < length; count++) {
             mTabLayoutView.addTab(mTabLayoutView.newTab().setText(mTabTexts[count]));
@@ -92,6 +92,81 @@ public class HomeFragment extends BaseLazyLoadFragment {
         mTabLayoutView.setupWithViewPager(mContentPagerView);
     }
 }
+
+
+
+
+//
+//    Bitmap bitmap = loadBitmapFromView(mCacheView.get(mSelectPosition));
+//                if (bitmap == null){
+//                        Toast.makeText(ImageDetailsActivity.this, "bitmap_1为空", Toast.LENGTH_SHORT).show();
+//                        }
+//                        String imageFilePath = saveBitmap(getBaseContext(), bitmap);
+//                        if (imageFilePath != null){
+//                        Toast.makeText(getApplicationContext(), "图片保存至" + imageFilePath, Toast.LENGTH_SHORT).show();
+//                        }else{
+//                        Toast.makeText(getApplicationContext(), "图片保存失败", Toast.LENGTH_SHORT).show();
+//                        }
+////                String imageurl = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(mSelectPosition).getImageurl();
+////                download(imageurl);
+//                        reserve_tv.setVisibility(View.INVISIBLE);
+//                        if (mCacheView.get(mSelectPosition) == null){
+//                        Toast.makeText(ImageDetailsActivity.this, "为空", Toast.LENGTH_SHORT).show();
+//
+
+//
+//    private Bitmap loadBitmapFromView(View v) {
+//        int w = v.getWidth();
+//        int h = v.getHeight();
+//        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+//        Canvas c = new Canvas(bmp);
+//
+//        //c.drawColor(Color.WHITE);
+//        /** 如果不设置canvas画布为白色，则生成透明 */
+//
+//        v.layout(0, 0, w, h);
+//        v.draw(c);
+//
+//        return bmp;
+//    }
+//
+//    public static String saveBitmap(Context context, Bitmap mBitmap) {
+//        String savePath;
+//        File filePic;
+//        if (Environment.getExternalStorageState().equals(
+//                Environment.MEDIA_MOUNTED)) {
+//            savePath = SD_PATH;
+//        } else {
+//            savePath = context.getApplicationContext().getFilesDir()
+//                    .getAbsolutePath()
+//                    + IN_PATH;
+//        }
+//        try {
+//            filePic = new File(savePath + UUID.randomUUID().toString() + ".jpg");
+//            if (!filePic.exists()) {
+//                filePic.getParentFile().mkdirs();
+//                filePic.createNewFile();
+//            }
+//            FileOutputStream fos = new FileOutputStream(filePic);
+//            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+//            fos.flush();
+//            fos.close();
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//            return null;
+//        }
+//
+//        return filePic.getAbsolutePath();
+//    }
+
+
+
+
+
+
+
+
 
 
 

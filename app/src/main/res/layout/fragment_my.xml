@@ -50,7 +50,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="10dp"
-            android:background="@color/gray"/>
+            android:background="@color/space_color"/>
 
         <LinearLayout
             android:id="@+id/set_button"
@@ -82,7 +82,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@color/gray"/>
+            android:background="@color/space_color"/>
 
         <LinearLayout
             android:id="@+id/collect_button"
@@ -124,7 +124,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@color/gray"/>
+            android:background="@color/space_color"/>
 
         <LinearLayout
             android:id="@+id/record_button"

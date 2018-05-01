@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
@@ -25,8 +26,9 @@ import java.util.List;
 
 import static com.wuhan.gallery.GalleryApplication.getContext;
 
-class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder> {
 
+//RecycleView的配适器,继承自RecyclerView.Adapter，泛型指定为HostImageAdapter.ViewHolder
+class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder> {
     private Fragment mFragment;
     private List<ImageBean> mImageUrls;
     private OnItemClickListener mOnClickListener;
@@ -39,21 +41,27 @@ class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder>
         mOnClickListener = onClickListener;
     }
 
+    //构造函数引入数据源
     HostImageAdapter(Fragment fragment, List<ImageBean> imageUrls) {
         mFragment = fragment;
         mImageUrls = imageUrls;
     }
 
+    //用于创建ViewHolder实例，
     @NonNull
     @Override
     public HostImageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //将item的布局加载进来
         View contentView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_home_host_image, parent, false);
         return new ViewHolder(contentView);
     }
 
+
+    //用于对RecyclerView子项的数据进行赋值，会在每个子项被滚动到屏幕内的时候执行
     @Override
     public void onBindViewHolder(@NonNull HostImageAdapter.ViewHolder holder, int position) {
+        //为item设置Tag
         holder.itemView.setTag(R.id.tag_view_holder_position, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +73,8 @@ class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder>
             }
         });
 
-        int roundingRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                10, Resources.getSystem().getDisplayMetrics());
+//        int roundingRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+//                10, Resources.getSystem().getDisplayMetrics());
 /*        Glide.with(mFragment).load(mImageUrls.get(position))
                 .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(roundingRadius)))
                 .into(holder.mImageView);*/
@@ -74,7 +82,7 @@ class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder>
 
         String url = SingletonNetServer.sIMAGE_SERVER_HOST + mImageUrls.get(position).getImageurl();
         Glide.with(mFragment).load(url)
-                .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(roundingRadius)))
+               // .apply(new RequestOptions().transforms(new CenterCrop(), new RoundedCorners(roundingRadius)))
                 .into(holder.mImageView);
     }
 
@@ -86,10 +94,13 @@ class HostImageAdapter extends RecyclerView.Adapter<HostImageAdapter.ViewHolder>
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView mImageView;
         CheckBox mClickButton;
+        TextView mClickCount;
+
         public ViewHolder(View itemView) {
             super(itemView);
-            mImageView     = itemView.findViewById(R.id.image_view);
+            mImageView   = itemView.findViewById(R.id.image_view);
             mClickButton = itemView.findViewById(R.id.click_button);
+            mClickCount = itemView.findViewById(R.id.click_count);   //显示点击量
         }
     }
 }

@@ -7,8 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,6 +32,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -56,8 +62,8 @@ import retrofit2.http.Url;
 
 public class ImageDetailsActivity extends BaseActivity {
 
-    private static final String SD_PATH = "/sdcard/gallery/pic/";
-    private static final String IN_PATH = "/gallery/pic/";
+    private static final String SD_PATH = "/sdcard/myapp/pic/";
+    private static final String IN_PATH = "/myapp/pic/";
 
 
     private int mPosition;
@@ -78,6 +84,7 @@ public class ImageDetailsActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_details);
+
         Intent intent = getIntent();
         if (intent != null) {
             mPosition = intent.getIntExtra("position", 0);
@@ -97,7 +104,7 @@ public class ImageDetailsActivity extends BaseActivity {
         viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
-                return mImageBeans == null? 0 : mImageBeans.size();
+                return mImageBeans == null ? 0 : mImageBeans.size();
             }
 
             @NonNull
@@ -105,7 +112,7 @@ public class ImageDetailsActivity extends BaseActivity {
             public Object instantiateItem(@NonNull ViewGroup container, final int position) {
                 ImageView view = (PhotoView) mCacheView.get(position);
                 if (view == null) {
-                    view = new PhotoView(container.getContext());
+                    view = new PhotoView(container.getContext());   //图片点击放缩
                     view.setScaleType(ImageView.ScaleType.CENTER);
                     view.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -121,24 +128,22 @@ public class ImageDetailsActivity extends BaseActivity {
 
                     String url = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(position).getImageurl();
                     Picasso.get().load(url).into(view);
+//                    Glide.with(getBaseContext()).load(url)
+//                            .into(view);
                     mCacheView.put(position, view);
 
-                    //Bitmap bitmap = (mCacheView.get(viewPager.getCurrentItem())).getDrawingCache(true);
-                    Bitmap bitmap = convertViewToBitmap(mCacheView.get(viewPager.getCurrentItem()));
-                    if (bitmap == null){
-                        Toast.makeText(ImageDetailsActivity.this, "biymap_1为空", Toast.LENGTH_SHORT).show();
-                    }
+                    view.setOnLongClickListener(new View.OnLongClickListener() {
+
+                        @Override
+                        public boolean onLongClick(View v) {
+                            //String url = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(position).getImageurl();
+                            reserve_tv.setVisibility(View.VISIBLE);
+                            //Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                    });
+
                 }
-
-                view.setOnLongClickListener(new View.OnLongClickListener() {
-
-                    @Override
-                    public boolean onLongClick(View v) {
-                        reserve_tv.setVisibility(View.VISIBLE);
-                        // Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
 
                 container.addView(view);
                 return view;
@@ -180,22 +185,26 @@ public class ImageDetailsActivity extends BaseActivity {
         mLoadingDialog = new LoadingDialog(this);
         mLikeCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
         mCollectCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
-      //mDownloadCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
-//        reserve_tv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                String imageurl = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(mPosition).getImageurl();
-////                Bitmap bitmap= BitmapFactory.decodeFile(imageurl);
-//                Bitmap bitmap = (mCacheView.get(viewPager.getCurrentItem())).getDrawingCache();
-//                String imageFilePath = saveBitmap(getBaseContext(), bitmap);
-//                if (imageFilePath != null){
-//                    Toast.makeText(getApplicationContext(), "图片保存至" + imageFilePath, Toast.LENGTH_SHORT).show();
-//                }else{
-//                    Toast.makeText(getApplicationContext(), "图片保存失败", Toast.LENGTH_SHORT).show();
+//      mDownloadCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        reserve_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                String imageurl = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(mSelectPosition).getImageurl();
+
+                Bitmap bitmap = loadBitmapFromView(mCacheView.get(mSelectPosition));
+//                if (bitmap == null){
+//                    Toast.makeText(ImageDetailsActivity.this, "bitmap_1为空", Toast.LENGTH_SHORT).show();
 //                }
-//                reserve_tv.setVisibility(View.INVISIBLE);
-//            }
-//        });
+                String imageFilePath = saveBitmap(getBaseContext(), bitmap);
+                if (imageFilePath != null){
+                    Toast.makeText(getApplicationContext(), "图片保存至" + imageFilePath, Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "图片保存失败", Toast.LENGTH_SHORT).show();
+                }
+
+                reserve_tv.setVisibility(View.INVISIBLE);
+            }
+        });
 
 
         //浏览之后提交浏览状态
@@ -255,32 +264,27 @@ public class ImageDetailsActivity extends BaseActivity {
     };
 
 
+    private Bitmap loadBitmapFromView(View v) {
 
-    public static Bitmap convertViewToBitmap(View view){
+        int w = v.getWidth();
+        int h = v.getHeight();
 
-        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
 
-        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        //c.drawColor(Color.WHITE);
+        /** 如果不设置canvas画布为白色，则生成透明 */
 
-        view.buildDrawingCache();
+       // v.layout(0, 0, w, h);
+        v.draw(c);
 
-        Bitmap bitmap=view.getDrawingCache();
-
-        return bitmap;
-
+        return bmp;
     }
 
-
-    public String saveBitmap(Context context, Bitmap mBitmap) {
-
-//        if (mBitmap == null){
-//            //Toast.makeText(getApplicationContext(), "图为空", Toast.LENGTH_SHORT).show();
-//        }
-
+    public static String saveBitmap(Context context, Bitmap mBitmap) {
         String savePath;
         File filePic;
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             savePath = SD_PATH;
         } else {
             savePath = context.getApplicationContext().getFilesDir()
@@ -294,7 +298,7 @@ public class ImageDetailsActivity extends BaseActivity {
                 filePic.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(filePic);
-          //  mBitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
         } catch (IOException e) {
@@ -309,43 +313,10 @@ public class ImageDetailsActivity extends BaseActivity {
 }
 
 
-//
-//                else if (buttonView.getId() == R.id.download_button){
-//                    //Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            String imageurl = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(mSelectPosition).getImageurl();
-//                            Bitmap bitmap= BitmapFactory.decodeFile(imageurl);
-//
-//                            Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
-//                            Log.d("ImageDetailsActivity","" +imageurl);
-//                            saveImageToGallery(bitmap);
-//
-//                           // Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }).start();
-//
-////                    String imageurl = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(mSelectPosition).getImageurl();
-////                    Bitmap bitmap= BitmapFactory.decodeFile(imageurl);
-////                    saveImageToGallery(bitmap);
-// //                   Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
-//                }
+//测试bitmap老为空？？？？？
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//                    //Bitmap bitmap = (mCacheView.get(viewPager.getCurrentItem())).getDrawingCache(true);
+//                    Bitmap bitmap = convertViewToBitmap(mCacheView.get(viewPager.getCurrentItem()));
+//                    if (bitmap == null){
+//                        Toast.makeText(ImageDetailsActivity.this, "bitmap_1为空", Toast.LENGTH_SHORT).show();
+//                    }

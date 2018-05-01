@@ -9,10 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-
 public abstract class BaseLazyLoadFragment extends BaseFragment {
     protected boolean isVisible = false;    //当前Fragment是否可见
-    private boolean isPrepared = false;     //是否与View建立起映射关系
+    private boolean isInitView = false;     //是否与View建立起映射关系
     private boolean isFirst = true; //用是否是第一次加载数据
 
     private View mContentView;
@@ -30,27 +29,30 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         if (mContentView == null) {
-            mContentView = inflater.inflate(getLayoutId(), container, false);
+            mContentView =
+                    inflater.inflate(getLayoutId(), container, false);
         }
         initView(mContentView);
-        isPrepared = true;
+        isInitView = true;
         lazyLoadData();
         return mContentView;
     }
 
     protected void lazyLoadData() {
-        if (!isPrepared || !isVisible || !isFirst) {
+        if (!isInitView || !isVisible || !isFirst) {
             return;
         }
-        getData();
+        getData();                  //完成第一次加载
         isFirst = false;
     }
 
-    protected abstract void getData();
-    protected abstract @LayoutRes int getLayoutId();
-    protected abstract void initView(View convertView);
+    protected abstract void getData();                     //加载布局文件
+    protected abstract @LayoutRes int getLayoutId();       //让布局中的view与fragment中的变量建立起映射
+    protected abstract void initView(View convertView);    //加载要显示的数据
 }
 
 

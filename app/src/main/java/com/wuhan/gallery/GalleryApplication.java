@@ -12,7 +12,7 @@ public class GalleryApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        sContext = this;
+        sContext = (GalleryApplication) this.getApplicationContext();     //sContext = this;??????????
     }
 
     public static GalleryApplication getContext() {

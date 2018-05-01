@@ -74,6 +74,7 @@ public class TabFragment extends BaseLazyLoadFragment {
         mSmartRefreshLayout    = contentView.findViewById(R.id.refresh_layout);
         GridView imageGridView = contentView.findViewById(R.id.image_grid_view);
 
+        //设置配适器
         mTabImageAdapter = new TabImageAdapter(this, mImageData);
         imageGridView.setAdapter(mTabImageAdapter);
         imageGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -84,17 +85,19 @@ public class TabFragment extends BaseLazyLoadFragment {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
                 intent.putParcelableArrayListExtra("images", imageBeans);
                 ActivityOptionsCompat activityOptionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(view,"image"));
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(), Pair.create(view,"image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
             }
         });
 
         mSmartRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            //上滑加载功能的实现
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 getData();
             }
-
+            //下拉刷新功能的实现
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 mPage = 0;

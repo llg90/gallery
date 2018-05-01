@@ -46,7 +46,7 @@ public class HostFragment extends BaseLazyLoadFragment {
     private Banner mBanner;
     private List<ImageBean> mBannerImage;
     private ArrayList<String> mBannerImageUrlData = new ArrayList<>();
-
+    private ArrayList<ImageBean> mBannerImageBeans = new ArrayList<>();
 //    private ArrayList<ImageBean> mBannerData = new ArrayList<>();
 //    private HostImageAdapter mBannerAdapter;
 
@@ -74,8 +74,11 @@ public class HostFragment extends BaseLazyLoadFragment {
                             List<ImageBean> topclick = data.getClicklist();
                             List<ImageBean> likelist = data.getLikelist();
                             if (banner != null) {
+                                mBannerImageBeans.clear();
+                                mBannerImageBeans.addAll(banner);
+
                                 mBannerImage = banner;
-                                mBannerImageUrlData.clear();
+                                mBannerImageUrlData.clear();                        //清楚历史数据
                                 for (ImageBean imageBean : banner){
                                     String url = SingletonNetServer.sIMAGE_SERVER_HOST + imageBean.getImageurl();
                                     mBannerImageUrlData.add(url);
@@ -116,19 +119,25 @@ public class HostFragment extends BaseLazyLoadFragment {
     @Override
     protected void initView(View contentView) {
 
+
         Drawable decorationDrawable;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider, getContext().getTheme());
+            decorationDrawable = getResources().getDrawable(
+                    R.drawable.host_image_divider, getContext().getTheme());
         } else {
-            decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider);
+            decorationDrawable = getResources().getDrawable(
+                    R.drawable.host_image_divider);
         }
 
-        //点击榜
-        RecyclerView leaderBoardListView = contentView.findViewById(R.id.leader_board_list_view);
+        //点击榜RecyclerView
+        RecyclerView leaderBoardListView = contentView.findViewById(
+                R.id.leader_board_list_view);
         //设置布局管理器，并设为水平
-        leaderBoardListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        leaderBoardListView.setLayoutManager(new LinearLayoutManager(
+                getContext(), LinearLayoutManager.HORIZONTAL, false));
         //设置分隔线
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(leaderBoardListView.getContext(), LinearLayoutManager.HORIZONTAL);
+        DividerItemDecoration itemDecoration = new DividerItemDecoration(
+                leaderBoardListView.getContext(), LinearLayoutManager.HORIZONTAL);
         itemDecoration.setDrawable(decorationDrawable);
         leaderBoardListView.addItemDecoration(itemDecoration);
         //新建配适器
@@ -139,8 +148,11 @@ public class HostFragment extends BaseLazyLoadFragment {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
                 intent.putExtra("position", position);
                 intent.putParcelableArrayListExtra("images", mLeaderBoardData);
+
+                //将界面中itemView与新界面元素相关联
                 ActivityOptionsCompat activityOptionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(itemView, "image"));
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(), Pair.create(itemView, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
             }
         });
@@ -160,6 +172,7 @@ public class HostFragment extends BaseLazyLoadFragment {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
                 intent.putExtra("position", position);
                 intent.putParcelableArrayListExtra("images", mLikeListData);
+
                 ActivityOptionsCompat activityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create(itemView, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
@@ -181,13 +194,15 @@ public class HostFragment extends BaseLazyLoadFragment {
             @Override
             public void OnBannerClick(int position) {
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
-                ArrayList<ImageBean> imageBeans = new ArrayList<>();
-                imageBeans.add(mBannerImage.get(position));
+              //  ArrayList<ImageBean> imageBeans = new ArrayList<>();
+              //  imageBeans.add(mBannerImage.get(position));
+
                 intent.putExtra("position", position);
-                intent.putParcelableArrayListExtra("images", imageBeans);
+                intent.putParcelableArrayListExtra("images", mBannerImageBeans);
 
                 ActivityOptionsCompat activityOptionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), Pair.create((View)mBanner, "image"));
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(), Pair.create((View)mBanner, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
             }
         });
