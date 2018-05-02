@@ -2,6 +2,7 @@ package com.wuhan.gallery.bean;
 
 import java.util.List;
 
+//RecordFragment的数据源
 public class RecordImageBean {
     private int type;
     private String time;

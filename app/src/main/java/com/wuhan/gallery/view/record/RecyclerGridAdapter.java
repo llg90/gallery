@@ -49,6 +49,8 @@ class RecyclerGridAdapter extends MBaseAdapter<ImageBean> {
         return convertView;
     }
 
+
+
     static class ViewHolder {
         ImageView mImageView;
 

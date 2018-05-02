@@ -50,9 +50,12 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
         isFirst = false;
     }
 
-    protected abstract void getData();                     //加载布局文件
-    protected abstract @LayoutRes int getLayoutId();       //让布局中的view与fragment中的变量建立起映射
-    protected abstract void initView(View convertView);    //加载要显示的数据
+    //加载要显示的数据
+    protected abstract void getData();
+    //让布局中的view与fragment中的变量建立起映射
+    protected abstract @LayoutRes int getLayoutId();
+    //加载布局文件
+    protected abstract void initView(View contentView);
 }
 
 

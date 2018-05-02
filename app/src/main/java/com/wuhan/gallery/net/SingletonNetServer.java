@@ -15,9 +15,8 @@ public enum SingletonNetServer {
     private ImageServer mImageServer;
 
     SingletonNetServer() {
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-                .addInterceptor(new HttpLoggingInterceptor()
-                        .setLevel(HttpLoggingInterceptor.Level.BODY))
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()     //开启body日志添加拦截器
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()

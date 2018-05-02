@@ -64,8 +64,9 @@ public class HostFragment extends BaseLazyLoadFragment {
         int id = userBean == null ? 0 : userBean.getId();
         SingletonNetServer.INSTANCE.getImageServer().clicktopload(id)
                 .compose(this.<NetworkDataBean<HostDataBean>>bindToLifecycle())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new NetObserver<NetworkDataBean<HostDataBean>>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new NetObserver<NetworkDataBean<HostDataBean>>() {
                     @Override
                     public void onNext(NetworkDataBean<HostDataBean> hostDataBeanNetworkDataBean) {
                         if (hostDataBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
@@ -101,8 +102,6 @@ public class HostFragment extends BaseLazyLoadFragment {
                         }
                     }
                 });
-
-
     }
 
     @Override

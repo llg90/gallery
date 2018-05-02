@@ -2,6 +2,7 @@ package com.wuhan.gallery.bean;
 
 import java.util.List;
 
+//HostFragment获取的数据源
 public class HostDataBean {
     private List<ImageBean> maxlist;
     private List<ImageBean> clicklist;

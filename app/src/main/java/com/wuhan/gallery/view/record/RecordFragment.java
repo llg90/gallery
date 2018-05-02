@@ -30,6 +30,7 @@ public class RecordFragment extends BaseLazyLoadFragment {
     private SmartRefreshLayout mRefreshLayout;
     private RecyclerView mImageRecyclerView;
 
+    //存放数据源
     private List<RecordImageBean> mRecordImageBeans = new ArrayList<>();
     private RecordImageRecyclerAdapter mRecordImageRecyclerAdapter;
 
@@ -37,6 +38,7 @@ public class RecordFragment extends BaseLazyLoadFragment {
     protected void getData() {
         UserBean userBean = GalleryApplication.getUserBean();
         if (userBean == null) return;
+
         SingletonNetServer.INSTANCE.getImageServer().getImageBrowse(userBean.getId(), ImageStatusEnum.BROWSE.getValue())
                 .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -54,10 +56,10 @@ public class RecordFragment extends BaseLazyLoadFragment {
                                 if (item.getAddtime().equals(time)) {
                                     mRecordImageBeans.get(position).getUrls().add(item);
                                 } else {
-                                    position += 2;
                                     time = item.getAddtime();
                                     mRecordImageBeans.add(new RecordImageBean(0,time, null));
                                     mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+                                    position += 2;
                                     mRecordImageBeans.get(position).getUrls().add(item);
                                 }
                             }
@@ -81,9 +83,9 @@ public class RecordFragment extends BaseLazyLoadFragment {
     }
 
     @Override
-    protected void initView(View convertView) {
-        mRefreshLayout = convertView.findViewById(R.id.refresh_layout);
-        mImageRecyclerView = convertView.findViewById(R.id.image_recycler_view);
+    protected void initView(View contentView) {
+        mRefreshLayout = contentView.findViewById(R.id.refresh_layout);
+        mImageRecyclerView = contentView.findViewById(R.id.image_recycler_view);
 
         mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override

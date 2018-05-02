@@ -29,6 +29,7 @@ public abstract class NetObserver<T> implements Observer<T> {
         mLoadingDialog = loadingDialog;
         mSmartRefreshLayout = smartRefreshLayout;
     }
+
     @Override
     public void onSubscribe(Disposable d) {
         if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
@@ -62,4 +63,5 @@ public abstract class NetObserver<T> implements Observer<T> {
 
         }
     }
+
 }

@@ -1,5 +1,7 @@
 package com.wuhan.gallery.bean;
 
+
+//获取服务器返回的标准数据源
 public class NetworkDataBean<T> {
     private String status;
     private T data;

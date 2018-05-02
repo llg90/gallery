@@ -14,8 +14,11 @@ public class ImageBean implements Parcelable{
     private int browsecount;
     private int collectcount;
     private int status;
-    //   private int
 
+
+    /**
+     * 包装了需要传输的数据,然后在Binder中传输,用于跨进程传输数据
+     */
     protected ImageBean(Parcel in) {
         id = in.readInt();
         imageurl = in.readString();
@@ -27,6 +30,7 @@ public class ImageBean implements Parcelable{
         status = in.readInt();
     }
 
+    //实现序列化
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -39,17 +43,22 @@ public class ImageBean implements Parcelable{
         dest.writeInt(status);
     }
 
+    //负责文件描述,针对一些特殊的需要描述信息的对象,需要返回1,其他情况返回0
     @Override
     public int describeContents() {
         return 0;
     }
 
+
+    //负责反序列化
     public static final Creator<ImageBean> CREATOR = new Creator<ImageBean>() {
+        //从序列化后的对象中创建原始对象
         @Override
-        public ImageBean createFromParcel(Parcel in) {
-            return new ImageBean(in);
+        public ImageBean createFromParcel(Parcel source) {
+            return new ImageBean(source);
         }
 
+        //创建指定长度的原始对象数组
         @Override
         public ImageBean[] newArray(int size) {
             return new ImageBean[size];
