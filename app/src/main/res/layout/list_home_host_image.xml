@@ -21,13 +21,21 @@
         android:orientation="vertical"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end">
-        <CheckBox
-            android:id="@+id/click_button"
+        <!--<CheckBox-->
+            <!--android:id="@+id/click_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--android:layout_marginEnd="5dp"-->
+            <!--android:button="@drawable/likes_selector"/>-->
+
+        <ImageView
+            android:id="@+id/click_animation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_marginEnd="5dp"
-            android:button="@drawable/likes_selector"/>
+            android:src="@drawable/click_shape" />
 
         <TextView
             android:id="@+id/click_count"

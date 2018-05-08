@@ -13,8 +13,9 @@ public class ImageBean implements Parcelable{
     private int clickcount;
     private int browsecount;
     private int collectcount;
+    private int clickstatus;
+    private int collectstatus;
     private int status;
-
 
     /**
      * 包装了需要传输的数据,然后在Binder中传输,用于跨进程传输数据
@@ -27,6 +28,8 @@ public class ImageBean implements Parcelable{
         clickcount = in.readInt();
         browsecount = in.readInt();
         collectcount = in.readInt();
+        clickstatus = in.readInt();
+        collectstatus = in.readInt();
         status = in.readInt();
     }
 
@@ -40,6 +43,8 @@ public class ImageBean implements Parcelable{
         dest.writeInt(clickcount);
         dest.writeInt(browsecount);
         dest.writeInt(collectcount);
+        dest.writeInt(clickstatus);
+        dest.writeInt(collectstatus);
         dest.writeInt(status);
     }
 
@@ -121,6 +126,22 @@ public class ImageBean implements Parcelable{
         this.collectcount = collectcount;
     }
 
+    public int getClickstatus() {
+        return clickstatus;
+    }
+
+    public void setClickstatus(int clickstatus) {
+        this.clickstatus = clickstatus;
+    }
+
+    public int getCollectstatus() {
+        return collectstatus;
+    }
+
+    public void setCollectstatus(int collectstatus) {
+        this.collectstatus = collectstatus;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -128,4 +149,5 @@ public class ImageBean implements Parcelable{
     public void setStatus(int status) {
         this.status = status;
     }
+
 }

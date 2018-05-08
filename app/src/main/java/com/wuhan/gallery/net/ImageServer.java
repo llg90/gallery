@@ -32,12 +32,20 @@ public interface ImageServer {
     @POST("execute/browse")
     Observable<NetworkDataBean<List<ImageBean>>> getImageBrowse(
             @Field("id") int userId,
-            @Field("status") int status);  //1为浏览，2为收藏，3为点赞
+            @Field("status") int status);
 
     //提交执行的操作
     @FormUrlEncoded
     @POST("execute/add")
-    Observable<NetworkDataBean<Boolean>> setImageStatus(
+    Observable<NetworkDataBean<Boolean>> addImageStatus(
+            @Field("userid") int userId,
+            @Field("imagesid") int imagesId,
+            @Field("status") int status);//1为浏览，2为收藏，3为点赞
+
+    //取消执行的操作
+    @FormUrlEncoded
+    @POST("execute/cancel")
+    Observable<NetworkDataBean<Boolean>> cancelImageStatus(
             @Field("userid") int userId,
             @Field("imagesid") int imagesId,
             @Field("status") int status);//1为浏览，2为收藏，3为点赞

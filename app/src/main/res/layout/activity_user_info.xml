@@ -30,7 +30,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/line_color"/>
+        android:background="@color/space_color"/>
 
     <LinearLayout
         android:id="@+id/user_icon_button"
@@ -71,7 +71,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="10dp"
-        android:background="@color/line_color"/>
+        android:background="@color/space_color"/>
 
     <View
         android:layout_width="match_parent"

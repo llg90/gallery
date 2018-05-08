@@ -97,6 +97,9 @@ public class RegisterActivity extends BaseActivity {
                                 Toast.makeText(RegisterActivity.this, booleanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
                                 finish();
                             }
+                            else{
+                                Toast.makeText(RegisterActivity.this, booleanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
         }

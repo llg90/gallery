@@ -44,13 +44,10 @@ public class HostFragment extends BaseLazyLoadFragment {
 
     //首页轮播
     private Banner mBanner;
-    private List<ImageBean> mBannerImage;
     private ArrayList<String> mBannerImageUrlData = new ArrayList<>();
     private ArrayList<ImageBean> mBannerImageBeans = new ArrayList<>();
-//    private ArrayList<ImageBean> mBannerData = new ArrayList<>();
-//    private HostImageAdapter mBannerAdapter;
 
-
+    //加载对话框
     private LoadingDialog mLoadingDialog;
 
     @Override
@@ -78,7 +75,7 @@ public class HostFragment extends BaseLazyLoadFragment {
                                 mBannerImageBeans.clear();
                                 mBannerImageBeans.addAll(banner);
 
-                                mBannerImage = banner;
+                               // mBannerImage = banner;
                                 mBannerImageUrlData.clear();                        //清楚历史数据
                                 for (ImageBean imageBean : banner){
                                     String url = SingletonNetServer.sIMAGE_SERVER_HOST + imageBean.getImageurl();
@@ -121,19 +118,15 @@ public class HostFragment extends BaseLazyLoadFragment {
 
         Drawable decorationDrawable;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            decorationDrawable = getResources().getDrawable(
-                    R.drawable.host_image_divider, getContext().getTheme());
+            decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider, getContext().getTheme());
         } else {
-            decorationDrawable = getResources().getDrawable(
-                    R.drawable.host_image_divider);
+            decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider);
         }
 
         //点击榜RecyclerView
-        RecyclerView leaderBoardListView = contentView.findViewById(
-                R.id.leader_board_list_view);
+        RecyclerView leaderBoardListView = contentView.findViewById(R.id.leader_board_list_view);
         //设置布局管理器，并设为水平
-        leaderBoardListView.setLayoutManager(new LinearLayoutManager(
-                getContext(), LinearLayoutManager.HORIZONTAL, false));
+        leaderBoardListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         //设置分隔线
         DividerItemDecoration itemDecoration = new DividerItemDecoration(
                 leaderBoardListView.getContext(), LinearLayoutManager.HORIZONTAL);

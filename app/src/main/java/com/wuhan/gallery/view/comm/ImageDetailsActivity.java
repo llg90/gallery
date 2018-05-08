@@ -72,12 +72,11 @@ public class ImageDetailsActivity extends BaseActivity {
 
     private CheckBox mLikeCheckBox;
     private CheckBox mCollectCheckBox;
- //   private CheckBox mDownloadCheckBox;
     private TextView reserve_tv;
 
+    //记录当前图片的position
     private int mSelectPosition;
     private LoadingDialog mLoadingDialog;
-
 
 
     @Override
@@ -94,9 +93,8 @@ public class ImageDetailsActivity extends BaseActivity {
             finish();
         }
 
-        mLikeCheckBox    = findViewById(R.id.likes_button);
+        mLikeCheckBox    = findViewById(R.id.click_check_button);
         mCollectCheckBox = findViewById(R.id.collect_button);
-     // mDownloadCheckBox = findViewById(R.id.download_button);
         reserve_tv = findViewById(R.id.reserve_bnt);
 
         final ViewPager viewPager = findViewById(R.id.view_pager);
@@ -125,18 +123,14 @@ public class ImageDetailsActivity extends BaseActivity {
                         }
                     });
 
-
                     String url = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(position).getImageurl();
                     Picasso.get().load(url).into(view);
-//                    Glide.with(getBaseContext()).load(url)
-//                            .into(view);
                     mCacheView.put(position, view);
 
                     view.setOnLongClickListener(new View.OnLongClickListener() {
 
                         @Override
                         public boolean onLongClick(View v) {
-                            //String url = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(position).getImageurl();
                             reserve_tv.setVisibility(View.VISIBLE);
                             //Toast.makeText(ImageDetailsActivity.this, "已下载", Toast.LENGTH_SHORT).show();
                             return true;
@@ -162,6 +156,7 @@ public class ImageDetailsActivity extends BaseActivity {
 
         mSelectPosition = mPosition;
         viewPager.setCurrentItem(mPosition);
+        setCheckBoxStatus(mSelectPosition);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -171,9 +166,11 @@ public class ImageDetailsActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                mLikeCheckBox.setChecked(false);
-                mCollectCheckBox.setChecked(false);
+//                mLikeCheckBox.setChecked(false);
+//                mCollectCheckBox.setChecked(false);
+
                 mSelectPosition = position;
+                setCheckBoxStatus(mSelectPosition);
             }
 
             @Override
@@ -185,16 +182,12 @@ public class ImageDetailsActivity extends BaseActivity {
         mLoadingDialog = new LoadingDialog(this);
         mLikeCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
         mCollectCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
-//      mDownloadCheckBox.setOnCheckedChangeListener(mOnCheckedChangeListener);
+
         reserve_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String imageurl = SingletonNetServer.sIMAGE_SERVER_HOST + mImageBeans.get(mSelectPosition).getImageurl();
 
                 Bitmap bitmap = loadBitmapFromView(mCacheView.get(mSelectPosition));
-//                if (bitmap == null){
-//                    Toast.makeText(ImageDetailsActivity.this, "bitmap_1为空", Toast.LENGTH_SHORT).show();
-//                }
                 String imageFilePath = saveBitmap(getBaseContext(), bitmap);
                 if (imageFilePath != null){
                     Toast.makeText(getApplicationContext(), "图片保存至" + imageFilePath, Toast.LENGTH_SHORT).show();
@@ -213,7 +206,7 @@ public class ImageDetailsActivity extends BaseActivity {
             int userId  = userBean.getId();
             int imageId = mImageBeans.get(mSelectPosition).getId();
             int status = ImageStatusEnum.BROWSE.getValue();
-            SingletonNetServer.INSTANCE.getImageServer().setImageStatus(userId, imageId, status)
+            SingletonNetServer.INSTANCE.getImageServer().addImageStatus(userId, imageId, status)
                     .compose(ImageDetailsActivity.this.<NetworkDataBean<Boolean>>bindToLifecycle())
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetObserver<NetworkDataBean<Boolean>>(mLoadingDialog) {
@@ -233,17 +226,20 @@ public class ImageDetailsActivity extends BaseActivity {
     CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked) {
-                UserBean userBean = GalleryApplication.getUserBean();
-                if (userBean == null) {
-                    buttonView.setChecked(false);
-                    Toast.makeText(ImageDetailsActivity.this, "你还未登录", Toast.LENGTH_SHORT).show();
-                } else{
-                    int userId  = userBean.getId();
-                    int imageId = mImageBeans.get(mSelectPosition).getId();
-                    int status = buttonView.getId() ==
-                            R.id.likes_button? ImageStatusEnum.CLICK.getValue():ImageStatusEnum.COLLECTION.getValue();
-                    SingletonNetServer.INSTANCE.getImageServer().setImageStatus(userId, imageId, status)
+
+            UserBean userBean = GalleryApplication.getUserBean();
+            if (userBean == null) {
+                buttonView.setChecked(false);
+                Toast.makeText(ImageDetailsActivity.this, "你还未登录", Toast.LENGTH_SHORT).show();
+            } else{
+                //setCheckBoxStatus();
+                int userId  = userBean.getId();
+                int imageId = mImageBeans.get(mSelectPosition).getId();
+                int status = buttonView.getId() ==
+                        R.id.click_check_button ? ImageStatusEnum.CLICK.getValue():ImageStatusEnum.COLLECTION.getValue();
+
+                if (isChecked){
+                    SingletonNetServer.INSTANCE.getImageServer().addImageStatus(userId, imageId, status)
                             .compose(ImageDetailsActivity.this.<NetworkDataBean<Boolean>>bindToLifecycle())
                             .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new NetObserver<NetworkDataBean<Boolean>>(mLoadingDialog) {
@@ -255,13 +251,45 @@ public class ImageDetailsActivity extends BaseActivity {
                                     }
                                 }
                             });
-
-
                 }
-            }
+                else{
+                    SingletonNetServer.INSTANCE.getImageServer().cancelImageStatus(userId, imageId, status)
+                            .compose(ImageDetailsActivity.this.<NetworkDataBean<Boolean>>bindToLifecycle())
+                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new NetObserver<NetworkDataBean<Boolean>>(mLoadingDialog) {
 
+                                @Override
+                                public void onNext(NetworkDataBean<Boolean> booleanNetworkDataBean) {
+                                    if (!booleanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                                        Toast.makeText(ImageDetailsActivity.this, booleanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+
+
+            }
         }
     };
+
+
+    //设置控件的状态
+    private void setCheckBoxStatus(int position) {
+        if (mImageBeans.get(position).getClickstatus() != 0){
+            mLikeCheckBox.setChecked(true);
+        }
+        else{
+            mLikeCheckBox.setChecked(false);
+        }
+
+        if (mImageBeans.get(position).getCollectstatus() != 0){
+            mCollectCheckBox.setChecked(true);
+        }
+        else{
+            mCollectCheckBox.setChecked(false);
+        }
+
+    }
 
 
     private Bitmap loadBitmapFromView(View v) {
@@ -275,7 +303,7 @@ public class ImageDetailsActivity extends BaseActivity {
         //c.drawColor(Color.WHITE);
         /** 如果不设置canvas画布为白色，则生成透明 */
 
-       // v.layout(0, 0, w, h);
+
         v.draw(c);
 
         return bmp;
@@ -287,14 +315,14 @@ public class ImageDetailsActivity extends BaseActivity {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             savePath = SD_PATH;
         } else {
-            savePath = context.getApplicationContext().getFilesDir()
-                    .getAbsolutePath()
-                    + IN_PATH;
+            savePath = context.getApplicationContext().getFilesDir().getAbsolutePath() + IN_PATH;
         }
         try {
             filePic = new File(savePath + UUID.randomUUID().toString() + ".jpg");
             if (!filePic.exists()) {
+                //创建目录
                 filePic.getParentFile().mkdirs();
+                //创建文件
                 filePic.createNewFile();
             }
             FileOutputStream fos = new FileOutputStream(filePic);
@@ -302,7 +330,6 @@ public class ImageDetailsActivity extends BaseActivity {
             fos.flush();
             fos.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
@@ -320,3 +347,8 @@ public class ImageDetailsActivity extends BaseActivity {
 //                    if (bitmap == null){
 //                        Toast.makeText(ImageDetailsActivity.this, "bitmap_1为空", Toast.LENGTH_SHORT).show();
 //                    }
+
+//c.drawColor(Color.WHITE);
+/** 如果不设置canvas画布为白色，则生成透明 */
+
+// v.layout(0, 0, w, h);

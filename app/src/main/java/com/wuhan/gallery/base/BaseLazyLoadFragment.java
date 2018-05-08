@@ -33,8 +33,7 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         if (mContentView == null) {
-            mContentView =
-                    inflater.inflate(getLayoutId(), container, false);
+            mContentView = inflater.inflate(getLayoutId(), container, false);
         }
         initView(mContentView);
         isInitView = true;

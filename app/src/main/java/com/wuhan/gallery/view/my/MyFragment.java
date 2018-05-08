@@ -3,6 +3,8 @@ package com.wuhan.gallery.view.my;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +25,7 @@ import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.constant.ImageStatusEnum;
 import com.wuhan.gallery.net.NetObserver;
 import com.wuhan.gallery.net.SingletonNetServer;
+import com.wuhan.gallery.view.comm.ImageDetailsActivity;
 import com.wuhan.gallery.view.my.info.UserInfoActivity;
 import com.wuhan.gallery.view.my.login.LoginActivity;
 
@@ -33,16 +36,19 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyFragment extends BaseLazyLoadFragment {
+    //固定背景图
     private ImageView mUserBackgroundImageView;
+    //用户头像
     private ImageView mUserIconImageView;
+    //用户昵称
     private TextView  mUserNameTextView;
     private LinearLayout mSetButton;
 
-    private List<ImageBean> mCollectImageData = new ArrayList<>();
+    private ArrayList<ImageBean> mCollectImageData = new ArrayList<>();
     private ImageAdapter mCollectImageAdapter;
     private RecyclerView mCollectRecyclerView;
 
-    private List<ImageBean> mRecordImageData = new ArrayList<>();
+    private ArrayList<ImageBean> mRecordImageData = new ArrayList<>();
     private ImageAdapter mRecordImageAdapter;
     private RecyclerView mRecordRecyclerView;
 
@@ -120,24 +126,40 @@ public class MyFragment extends BaseLazyLoadFragment {
         mCollectRecyclerView = convertView.findViewById(R.id.collect_recycler_view);
         mRecordRecyclerView = convertView.findViewById(R.id.record_recycler_view);
 
-        Drawable decorationDrawable;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            decorationDrawable = getResources().getDrawable(R.drawable.my_image_divider, getContext().getTheme());
-        } else {
-            decorationDrawable = getResources().getDrawable(R.drawable.my_image_divider);
-        }
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.HORIZONTAL);
-        itemDecoration.setDrawable(decorationDrawable);
+//        Drawable decorationDrawable;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            decorationDrawable = getResources().getDrawable(R.drawable.my_image_divider, getContext().getTheme());
+//        } else {
+//            decorationDrawable = getResources().getDrawable(R.drawable.my_image_divider);
+//        }
+//        DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.HORIZONTAL);
+//        itemDecoration.setDrawable(decorationDrawable);
 
 
         mCollectImageAdapter = new ImageAdapter(this, mCollectImageData);
         mCollectRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        mCollectRecyclerView.addItemDecoration(itemDecoration);
+       // mCollectRecyclerView.addItemDecoration(itemDecoration);
+        //设置点击监听
+        mCollectImageAdapter.setOnClickListener(new ImageAdapter.OnItemClickListener(){
+
+            @Override
+            public void OnItemClick(View itemView, int position) {
+                Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
+                intent.putExtra("position", position);
+                intent.putParcelableArrayListExtra("images", mCollectImageData);
+
+                //将界面中itemView与新界面元素相关联
+                ActivityOptionsCompat activityOptionsCompat =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(), Pair.create(itemView, "image"));
+                startActivity(intent, activityOptionsCompat.toBundle());
+            }
+        });
         mCollectRecyclerView.setAdapter(mCollectImageAdapter);
 
         mRecordImageAdapter = new ImageAdapter(this, mRecordImageData);
         mRecordRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        mRecordRecyclerView.addItemDecoration(itemDecoration);
+        //mRecordRecyclerView.addItemDecoration(itemDecoration);
         mRecordRecyclerView.setAdapter(mRecordImageAdapter);
 
         initListener();

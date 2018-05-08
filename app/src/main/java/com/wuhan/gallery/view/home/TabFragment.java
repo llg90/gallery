@@ -41,7 +41,7 @@ public class TabFragment extends BaseLazyLoadFragment {
     @Override
     protected void getData() {
         UserBean userBean = GalleryApplication.getUserBean();
-        int userId = userBean!=null?userBean.getId():0;
+        int userId = userBean != null ? userBean.getId() : 0;
         SingletonNetServer.INSTANCE.getImageServer().getImagesByType(mType, mPage,userId)
                 .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
