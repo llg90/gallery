@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -105,17 +106,15 @@ public class UserInfoActivity extends BaseActivity {
         });
 
         View userIconButton = findViewById(R.id.user_icon_button);
-        RxView.clicks(userIconButton)
-                .compose(new RxPermissions(this).ensure(
-                        Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        RxView.clicks(userIconButton).compose(new RxPermissions(this)
+                .ensure(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
                     @Override
                     public ObservableSource<Boolean> apply(Boolean aBoolean) throws Exception {
-                        return aBoolean ?
-                                Observable.just(true) :
-                                new RxPermissions(UserInfoActivity.this).request(
+                        return aBoolean ? Observable.just(true) : new RxPermissions(UserInfoActivity.this).request(
                                         Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE,
                                         Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
                     }
                 }).subscribe(new SimplifyObserver<Boolean>() {
                     @Override
@@ -148,6 +147,7 @@ public class UserInfoActivity extends BaseActivity {
                 String[] projection = { MediaStore.Images.Media.DATA };
                 Cursor cur = managedQuery(iconUri, projection, null, null, null);
                 cur.moveToFirst();
+                //获取头像的路径
                 String path = cur.getString(cur.getColumnIndex(MediaStore.Images.Media.DATA));
                 File iconFile = new File(path);
                 MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);

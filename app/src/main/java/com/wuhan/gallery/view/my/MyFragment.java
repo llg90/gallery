@@ -1,6 +1,8 @@
 package com.wuhan.gallery.view.my;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -12,10 +14,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.wuhan.gallery.GalleryApplication;
 import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
@@ -24,15 +29,23 @@ import com.wuhan.gallery.bean.NetworkDataBean;
 import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.constant.ImageStatusEnum;
 import com.wuhan.gallery.net.NetObserver;
+import com.wuhan.gallery.net.SimplifyObserver;
 import com.wuhan.gallery.net.SingletonNetServer;
+import com.wuhan.gallery.view.comm.GlideEngine;
 import com.wuhan.gallery.view.comm.ImageDetailsActivity;
 import com.wuhan.gallery.view.my.info.UserInfoActivity;
 import com.wuhan.gallery.view.my.login.LoginActivity;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class MyFragment extends BaseLazyLoadFragment {
@@ -42,7 +55,8 @@ public class MyFragment extends BaseLazyLoadFragment {
     private ImageView mUserIconImageView;
     //用户昵称
     private TextView  mUserNameTextView;
-    private LinearLayout mSetButton;
+    private LinearLayout mSetBtn;
+    private LinearLayout mUploadBtn;
 
     private ArrayList<ImageBean> mCollectImageData = new ArrayList<>();
     private ImageAdapter mCollectImageAdapter;
@@ -63,9 +77,9 @@ public class MyFragment extends BaseLazyLoadFragment {
         UserBean userBean = GalleryApplication.getUserBean();
         if (userBean == null) return;
 
-        Glide.with(this).load(backgroundUrl)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(mUserBackgroundImageView);
+//        Glide.with(this).load(backgroundUrl)
+//                .transition(DrawableTransitionOptions.withCrossFade())
+//                .into(mUserBackgroundImageView);
 
         Glide.with(this)
                 .load(SingletonNetServer.sIMAGE_SERVER_HOST + userBean.getIcon())
@@ -121,11 +135,13 @@ public class MyFragment extends BaseLazyLoadFragment {
         mUserBackgroundImageView = convertView.findViewById(R.id.user_background_image_view);
         mUserIconImageView = convertView.findViewById(R.id.user_icon_image);
         mUserNameTextView  = convertView.findViewById(R.id.user_name_text);
-        mSetButton = convertView.findViewById(R.id.set_button);
+        mSetBtn = convertView.findViewById(R.id.set_button);
+        mUploadBtn = convertView.findViewById(R.id.upload_button);
 
         mCollectRecyclerView = convertView.findViewById(R.id.collect_recycler_view);
         mRecordRecyclerView = convertView.findViewById(R.id.record_recycler_view);
 
+        //分隔区域
 //        Drawable decorationDrawable;
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            decorationDrawable = getResources().getDrawable(R.drawable.my_image_divider, getContext().getTheme());
@@ -160,6 +176,21 @@ public class MyFragment extends BaseLazyLoadFragment {
         mRecordImageAdapter = new ImageAdapter(this, mRecordImageData);
         mRecordRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         //mRecordRecyclerView.addItemDecoration(itemDecoration);
+        mRecordImageAdapter.setOnClickListener(new ImageAdapter.OnItemClickListener(){
+
+            @Override
+            public void OnItemClick(View itemView, int position) {
+                Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
+                intent.putExtra("position", position);
+                intent.putParcelableArrayListExtra("images", mRecordImageData);
+
+                //将界面中itemView与新界面元素相关联
+                ActivityOptionsCompat activityOptionsCompat =
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(), Pair.create(itemView, "image"));
+                startActivity(intent, activityOptionsCompat.toBundle());
+            }
+        });
         mRecordRecyclerView.setAdapter(mRecordImageAdapter);
 
         initListener();
@@ -179,11 +210,19 @@ public class MyFragment extends BaseLazyLoadFragment {
             }
         });
 
-        mSetButton.setOnClickListener(new View.OnClickListener() {
+        mSetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), SetActivity.class));
             }
         });
+
+        mUploadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 }

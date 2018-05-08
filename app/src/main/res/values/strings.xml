@@ -16,6 +16,7 @@
 
     <string name="my_collect">我的收藏</string>
     <string name="set_text">设置</string>
+    <string name="user_upload_text">上传图片</string>
 
     <string name="user_name_hint">输入用户名</string>
     <string name="user_password_hint">输入密码</string>

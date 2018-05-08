@@ -85,6 +85,38 @@
             android:background="@color/space_color"/>
 
         <LinearLayout
+            android:id="@+id/upload_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:background="@drawable/item_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:text="@string/user_upload_text"/>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="@string/empty"
+                android:src="@mipmap/more"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/space_color"/>
+
+        <LinearLayout
             android:id="@+id/collect_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
