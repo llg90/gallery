@@ -3,7 +3,9 @@ package com.wuhan.gallery.view.record;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -37,30 +39,34 @@ public class RecordFragment extends BaseLazyLoadFragment {
     @Override
     protected void getData() {
         UserBean userBean = GalleryApplication.getUserBean();
-        if (userBean == null) return;
+        int id = userBean == null ? 0 : userBean.getId();
+        //if (userBean == null) return;
 
-        SingletonNetServer.INSTANCE.getImageServer().getImageBrowse(userBean.getId(), ImageStatusEnum.BROWSE.getValue())
+        SingletonNetServer.INSTANCE.getImageServer().getImageBrowse(id, ImageStatusEnum.BROWSE.getValue())
                 .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new NetObserver<NetworkDataBean<List<ImageBean>>>() {
                     @Override
                     public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
-                        List<ImageBean> data = listNetworkDataBean.getData();
-                        if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS) && data != null && !data.isEmpty()) {
+                        if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                            Log.d("RecordFragment","bjbfbqufjjbvjbrvbqerbvqer查询更新成功bcbciubibiu");
+                            List<ImageBean> myData = listNetworkDataBean.getData();
                             mRecordImageBeans.clear();
-                            String time = data.get(0).getAddtime();
-                            int position = 1;
-                            mRecordImageBeans.add(new RecordImageBean(0,time, null));
-                            mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
-                            for (ImageBean item : data) {
-                                if (item.getAddtime().equals(time)) {
-                                    mRecordImageBeans.get(position).getUrls().add(item);
-                                } else {
-                                    time = item.getAddtime();
-                                    mRecordImageBeans.add(new RecordImageBean(0,time, null));
-                                    mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
-                                    position += 2;
-                                    mRecordImageBeans.get(position).getUrls().add(item);
+                            if (myData != null && !myData.isEmpty()){
+                                String time = myData.get(0).getAddtime();
+                                int position = 1;
+                                mRecordImageBeans.add(new RecordImageBean(0,time, null));
+                                mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+                                for (ImageBean item:myData) {
+                                    if (item.getAddtime().equals(time)) {
+                                        mRecordImageBeans.get(position).getUrls().add(item);
+                                    } else {
+                                        time = item.getAddtime();
+                                        mRecordImageBeans.add(new RecordImageBean(0,time, null));
+                                        mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+                                        position += 2;
+                                        mRecordImageBeans.get(position).getUrls().add(item);
+                                    }
                                 }
                             }
                             mRecordImageRecyclerAdapter.notifyDataSetChanged();
@@ -75,6 +81,12 @@ public class RecordFragment extends BaseLazyLoadFragment {
         if (!hidden) {
             getData();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
     }
 
     @Override

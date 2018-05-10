@@ -68,7 +68,7 @@ public class ImageDetailsActivity extends BaseActivity {
 
     private int mPosition;
     private List<ImageBean> mImageBeans;
-    private SparseArray<View> mCacheView;
+    private SparseArray<View> mCacheView;      //缓存cache
 
     private CheckBox mLikeCheckBox;
     private CheckBox mCollectCheckBox;
@@ -210,7 +210,6 @@ public class ImageDetailsActivity extends BaseActivity {
                     .compose(ImageDetailsActivity.this.<NetworkDataBean<Boolean>>bindToLifecycle())
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NetObserver<NetworkDataBean<Boolean>>(mLoadingDialog) {
-
                         @Override
                         public void onNext(NetworkDataBean<Boolean> booleanNetworkDataBean) {
                             if (!booleanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
@@ -291,24 +290,21 @@ public class ImageDetailsActivity extends BaseActivity {
 
     }
 
-
+    //转view到Bitmap
     private Bitmap loadBitmapFromView(View v) {
-
         int w = v.getWidth();
         int h = v.getHeight();
 
         Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bmp);
 
-        //c.drawColor(Color.WHITE);
+        c.drawColor(Color.WHITE);
         /** 如果不设置canvas画布为白色，则生成透明 */
-
-
         v.draw(c);
 
         return bmp;
     }
-
+    //保存Bitmap
     public static String saveBitmap(Context context, Bitmap mBitmap) {
         String savePath;
         File filePic;
@@ -338,17 +334,3 @@ public class ImageDetailsActivity extends BaseActivity {
     }
 
 }
-
-
-//测试bitmap老为空？？？？？
-
-//                    //Bitmap bitmap = (mCacheView.get(viewPager.getCurrentItem())).getDrawingCache(true);
-//                    Bitmap bitmap = convertViewToBitmap(mCacheView.get(viewPager.getCurrentItem()));
-//                    if (bitmap == null){
-//                        Toast.makeText(ImageDetailsActivity.this, "bitmap_1为空", Toast.LENGTH_SHORT).show();
-//                    }
-
-//c.drawColor(Color.WHITE);
-/** 如果不设置canvas画布为白色，则生成透明 */
-
-// v.layout(0, 0, w, h);

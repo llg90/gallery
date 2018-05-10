@@ -17,6 +17,7 @@ import com.wuhan.gallery.constant.ImageTypeEnum;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
 
@@ -24,12 +25,13 @@ public class HomeFragment extends BaseLazyLoadFragment {
     private TabLayout mTabLayoutView;
     private ViewPager mContentPagerView;
 
-    private String[] mTabTexts = new String[] {"首页","明星", "风景","动漫","剧照" };
+    //ImageTypeEnum调用数据
+    EnumSet<ImageTypeEnum> typeEnums = EnumSet.allOf(ImageTypeEnum.class);
+    private String[] mTabTexts = new String[typeEnums.size() + 1];     // {"首页","明星", "风景","动漫","剧照","用户专区"};
     private List<BaseLazyLoadFragment> mFragments = new ArrayList<>();
 
     @Override
     protected void getData() {
-
     }
 
     @Override
@@ -49,8 +51,18 @@ public class HomeFragment extends BaseLazyLoadFragment {
         mContentPagerView.setCurrentItem(0);
     }
 
+    private void initTabText() {
+        int i = 1;
+        mTabTexts[0] = "首页";
+        for (ImageTypeEnum type : typeEnums){
+            mTabTexts[i] = type.getName().toString();
+            i++;
+        }
+    }
+
     @Override
     protected void initView(View contentView) {
+        initTabText();
         mTabLayoutView = contentView.findViewById(R.id.tab_layout_view);
         mContentPagerView = contentView.findViewById(R.id.content_pager_view);
 

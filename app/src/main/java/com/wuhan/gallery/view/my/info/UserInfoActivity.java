@@ -93,17 +93,7 @@ public class UserInfoActivity extends BaseActivity {
         findViewById(R.id.phone_button).setOnClickListener(mOnClickListener);
         findViewById(R.id.email_button).setOnClickListener(mOnClickListener);
         findViewById(R.id.password_button).setOnClickListener(mOnClickListener);
-        findViewById(R.id.logout_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GalleryApplication.setUserBean(null);
-                SharedPreferences sp = getSharedPreferences("gallery", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.clear();
-                editor.commit();
-                finish();
-            }
-        });
+        findViewById(R.id.logout_button).setOnClickListener(mOnClickListener);
 
         View userIconButton = findViewById(R.id.user_icon_button);
         RxView.clicks(userIconButton).compose(new RxPermissions(this)
@@ -155,7 +145,7 @@ public class UserInfoActivity extends BaseActivity {
                 builder.addFormDataPart("id", String.valueOf(GalleryApplication.getUserBean().getId()));
                 if (mLoadingDialog == null){
                    mLoadingDialog = new LoadingDialog(this);
-               }
+                }
                 SingletonNetServer.INSTANCE.getUserServer().upUserIcon(builder.build())
                         .compose(this.<NetworkDataBean<String>>bindToLifecycle())
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -180,13 +170,13 @@ public class UserInfoActivity extends BaseActivity {
                 Glide.with(this).load(url).apply(new RequestOptions().circleCrop()).into(mUserIcon);
 
                 String name = userBean.getUsername();
-                mNameText.setText(name==null?"":name);
+                mNameText.setText(name == null ? "" : name);
 
                 String phone = userBean.getTelephone();
-                mPhoneText.setText(phone==null?"":phone);
+                mPhoneText.setText( phone == null ? "" : phone);
 
                 String email = userBean.getEmail();
-                mEmailText.setText(email==null?"":email);
+                mEmailText.setText(email == null ? "" : email);
             }
         }
     }
@@ -224,9 +214,15 @@ public class UserInfoActivity extends BaseActivity {
                     intent.setClass(UserInfoActivity.this, ModifyPasswordActivity.class);
                     startActivity(intent);
                     break;
+                case R.id.logout_button:
+                    GalleryApplication.setUserBean(null);
+                    SharedPreferences sp = getSharedPreferences("gallery", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.clear();
+                    editor.commit();
+                    finish();
+                    break;
             }
         }
     };
-
-
 }

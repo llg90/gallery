@@ -7,6 +7,8 @@ import com.wuhan.gallery.bean.NetworkDataBean;
 import java.util.List;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -49,4 +51,8 @@ public interface ImageServer {
             @Field("userid") int userId,
             @Field("imagesid") int imagesId,
             @Field("status") int status);//1为浏览，2为收藏，3为点赞
+
+    //上传图片的操作
+    @POST("addImages")
+    Observable<NetworkDataBean<Boolean>> uploadImage(@Body RequestBody body);
 }

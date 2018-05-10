@@ -8,6 +8,16 @@ public class HostDataBean {
     private List<ImageBean> clicklist;
     private List<ImageBean> likelist;
 
+    public List<ImageBean> getUserlist() {
+        return userlist;
+    }
+
+    public void setUserlist(List<ImageBean> userlist) {
+        this.userlist = userlist;
+    }
+
+    private List<ImageBean> userlist;
+
     public List<ImageBean> getMaxlist() {
         return maxlist;
     }
