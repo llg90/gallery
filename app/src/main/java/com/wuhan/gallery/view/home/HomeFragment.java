@@ -27,7 +27,7 @@ public class HomeFragment extends BaseLazyLoadFragment {
 
     //ImageTypeEnum调用数据
     EnumSet<ImageTypeEnum> typeEnums = EnumSet.allOf(ImageTypeEnum.class);
-    private String[] mTabTexts = new String[typeEnums.size() + 1];     // {"首页","明星", "风景","动漫","剧照","用户专区"};
+    private String[] mTabTexts = new String[typeEnums.size() + 1];                // {"首页","明星", "风景","动漫","剧照","用户专区"};
     private List<BaseLazyLoadFragment> mFragments = new ArrayList<>();
 
     @Override
@@ -42,7 +42,6 @@ public class HomeFragment extends BaseLazyLoadFragment {
     @Override
     public void onResume() {
         super.onResume();
-      //  mContentPagerView.setCurrentItem(0);
     }
 
     @Override

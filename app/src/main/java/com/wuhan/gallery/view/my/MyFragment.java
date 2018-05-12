@@ -1,7 +1,9 @@
 package com.wuhan.gallery.view.my;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -33,6 +35,7 @@ import com.wuhan.gallery.R;
 import com.wuhan.gallery.base.BaseLazyLoadFragment;
 import com.wuhan.gallery.bean.ImageBean;
 import com.wuhan.gallery.bean.NetworkDataBean;
+import com.wuhan.gallery.bean.RecordImageBean;
 import com.wuhan.gallery.bean.UserBean;
 import com.wuhan.gallery.constant.ImageStatusEnum;
 import com.wuhan.gallery.constant.ImageTypeEnum;
@@ -57,6 +60,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import it.sephiroth.android.library.easing.Linear;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -70,8 +74,12 @@ public class MyFragment extends BaseLazyLoadFragment {
     private ImageView mUserIconImageView;
     //用户昵称
     private TextView  mUserNameTextView;
+    //设置
     private LinearLayout mSetBtn;
-    private View mUploadBtn;
+    //上传图片
+    private LinearLayout mUploadBtn;
+    private LinearLayout mCollectClearBtn;
+    private LinearLayout mRecordClearBtn;
 
     private ArrayList<ImageBean> mCollectImageData = new ArrayList<>();
     private ImageAdapter mCollectImageAdapter;
@@ -160,9 +168,12 @@ public class MyFragment extends BaseLazyLoadFragment {
         mUserNameTextView  = convertView.findViewById(R.id.user_name_text);
         mSetBtn = convertView.findViewById(R.id.set_button);
         mUploadBtn = convertView.findViewById(R.id.upload_button);
+        mCollectClearBtn = convertView.findViewById(R.id.collect_button);
+        mRecordClearBtn = convertView.findViewById(R.id.record_button);
 
         mCollectRecyclerView = convertView.findViewById(R.id.collect_recycler_view);
         mRecordRecyclerView = convertView.findViewById(R.id.record_recycler_view);
+
 
         //分隔区域
 //        Drawable decorationDrawable;
@@ -173,7 +184,6 @@ public class MyFragment extends BaseLazyLoadFragment {
 //        }
 //        DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.HORIZONTAL);
 //        itemDecoration.setDrawable(decorationDrawable);
-
 
         mCollectImageAdapter = new ImageAdapter(this, mCollectImageData);
         mCollectRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -220,6 +230,7 @@ public class MyFragment extends BaseLazyLoadFragment {
     }
 
     private void initListener() {
+        //登录逻辑
         mUserIconImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,6 +244,7 @@ public class MyFragment extends BaseLazyLoadFragment {
             }
         });
 
+        //设置
         mSetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,6 +252,120 @@ public class MyFragment extends BaseLazyLoadFragment {
             }
         });
 
+//        SingletonNetServer.INSTANCE.getImageServer().getImageBrowse(id, ImageStatusEnum.BROWSE.getValue())
+//                .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
+//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new NetObserver<NetworkDataBean<List<ImageBean>>>() {
+//                    @Override
+//                    public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
+//                        if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+//                            List<ImageBean> myData = listNetworkDataBean.getData();
+//                            mRecordImageBeans.clear();
+//                            if (myData != null && !myData.isEmpty()){
+//                                String time = myData.get(0).getAddtime();
+//                                int position = 1;
+//                                mRecordImageBeans.add(new RecordImageBean(0,time, null));
+//                                mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+//                                for (ImageBean item:myData) {
+//                                    if (item.getAddtime().equals(time)) {
+//                                        mRecordImageBeans.get(position).getUrls().add(item);
+//                                    } else {
+//                                        time = item.getAddtime();
+//                                        mRecordImageBeans.add(new RecordImageBean(0,time, null));
+//                                        mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
+//                                        position += 2;
+//                                        mRecordImageBeans.get(position).getUrls().add(item);
+//                                    }
+//                                }
+//                            }
+//                            mRecordImageRecyclerAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                });
+
+
+        //清空收藏记录
+        mCollectClearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (GalleryApplication.getUserBean() == null)
+                {
+                    Toast.makeText(getContext(), "您尚未登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                dialog.setMessage("清空收藏记录");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int id = GalleryApplication.getUserBean().getId();
+                        SingletonNetServer.INSTANCE.getImageServer().clearTrace(id, ImageStatusEnum.COLLECTION.getValue())
+                                //.compose(this.<NetworkDataBean<Boolean>>bindToLifecycle())
+                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new NetObserver<NetworkDataBean<Boolean>>() {
+                                    @Override
+                                    public void onNext(NetworkDataBean<Boolean> booleanNetworkDataBean) {
+                                        if (booleanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                                            Toast.makeText(getContext(), "收藏记录已清空", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                        getData();
+
+                    }
+                });
+                dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        //清空历史记录
+        mRecordClearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (GalleryApplication.getUserBean() == null)
+                {
+                    Toast.makeText(getContext(), "您尚未登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                dialog.setMessage("清空历史记录");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int id = GalleryApplication.getUserBean().getId();
+                        SingletonNetServer.INSTANCE.getImageServer().clearTrace(id, ImageStatusEnum.BROWSE.getValue())
+                                //.compose(this.<NetworkDataBean<Boolean>>bindToLifecycle())
+                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new NetObserver<NetworkDataBean<Boolean>>() {
+                                    @Override
+                                    public void onNext(NetworkDataBean<Boolean> booleanNetworkDataBean) {
+                                        if (booleanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                                            Toast.makeText(getContext(), "历史记录已清空", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                        getData();
+                    }
+                });
+                dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                dialog.show();
+            }
+        });
+
+        //上传图片
         RxView.clicks(mUploadBtn).compose(new RxPermissions(getActivity())
                 .ensure(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 .flatMap(new Function<Boolean, ObservableSource<Boolean>>() {
@@ -268,7 +394,6 @@ public class MyFragment extends BaseLazyLoadFragment {
                                     .thumbnailScale(0.85f)
                                     .imageEngine(new GlideEngine())
                                     .forResult(REQUEST_CODE_CHOOSE);
-                          //  Log.d("getActivity()","竟如金妮妮妮妮妮您地产商你对此苏宁彩电生产商的措施调查");
                         } else {
                             Toast.makeText(getContext(), "需要相机权限", Toast.LENGTH_SHORT).show();
                         }

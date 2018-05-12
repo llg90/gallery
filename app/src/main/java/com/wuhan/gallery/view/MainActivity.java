@@ -49,7 +49,8 @@ public class MainActivity extends BaseFragmentActivity {
                     case R.id.menu_record:position = 1;break;
                     case R.id.menu_my:    position = 2;break;
                 }
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.hide(mSelectedFragment);
                 fragmentTransaction.show(mFragments[position]);
                 fragmentTransaction.commit();
@@ -98,5 +99,10 @@ public class MainActivity extends BaseFragmentActivity {
                         }
                     });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

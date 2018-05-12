@@ -84,6 +84,7 @@ public class TabFragment extends BaseLazyLoadFragment {
                 imageBeans.add(mImageData.get(position));
                 Intent intent = new Intent(getContext(), ImageDetailsActivity.class);
                 intent.putParcelableArrayListExtra("images", imageBeans);
+
                 ActivityOptionsCompat activityOptionsCompat =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
                                 getActivity(), Pair.create(view,"image"));

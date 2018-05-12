@@ -49,7 +49,6 @@ public class RecordFragment extends BaseLazyLoadFragment {
                     @Override
                     public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
                         if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
-                            Log.d("RecordFragment","bjbfbqufjjbvjbrvbqerbvqer查询更新成功bcbciubibiu");
                             List<ImageBean> myData = listNetworkDataBean.getData();
                             mRecordImageBeans.clear();
                             if (myData != null && !myData.isEmpty()){

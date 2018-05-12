@@ -138,25 +138,11 @@ public class HostFragment extends BaseLazyLoadFragment {
 
     @Override
     protected void initView(View contentView) {
-
-
-//        Drawable decorationDrawable;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider, getContext().getTheme());
-//        } else {
-//            decorationDrawable = getResources().getDrawable(R.drawable.host_image_divider);
-//        }
-
-        //点击榜RecyclerView
-        RecyclerView leaderBoardListView = contentView.findViewById(R.id.leader_board_list_view);
+        RecyclerView leaderBoardListView =
+                contentView.findViewById(R.id.leader_board_list_view);
         //设置布局管理器，并设为水平
-        leaderBoardListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        //设置分隔线
-//        DividerItemDecoration itemDecoration = new DividerItemDecoration(
-//                leaderBoardListView.getContext(), LinearLayoutManager.HORIZONTAL);
-//        itemDecoration.setDrawable(decorationDrawable);
-//        leaderBoardListView.addItemDecoration(itemDecoration);
-        //新建配适器
+        leaderBoardListView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
         mLeaderBoardAdapter = new HostImageAdapter(this, mLeaderBoardData);
         mLeaderBoardAdapter.setOnClickListener(new HostImageAdapter.OnItemClickListener() {
             @Override
@@ -166,8 +152,7 @@ public class HostFragment extends BaseLazyLoadFragment {
                 intent.putParcelableArrayListExtra("images", mLeaderBoardData);
 
                 //将界面中itemView与新界面元素相关联
-                ActivityOptionsCompat activityOptionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                                 getActivity(), Pair.create(itemView, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
             }
@@ -175,7 +160,7 @@ public class HostFragment extends BaseLazyLoadFragment {
         leaderBoardListView.setAdapter(mLeaderBoardAdapter);
 
 
-        //用户专区user_uoload_list_view
+        //用户专区榜
         RecyclerView userListView = contentView.findViewById(R.id.user_uoload_list_view);
         userListView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mUserUploadAdapter = new HostImageAdapter(this, mUserUploadData);
@@ -236,8 +221,7 @@ public class HostFragment extends BaseLazyLoadFragment {
                 intent.putExtra("position", position);
                 intent.putParcelableArrayListExtra("images", mBannerImageBeans);
 
-                ActivityOptionsCompat activityOptionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
                                 getActivity(), Pair.create((View)mBanner, "image"));
                 startActivity(intent, activityOptionsCompat.toBundle());
             }

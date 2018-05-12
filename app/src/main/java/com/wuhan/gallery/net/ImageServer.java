@@ -4,6 +4,7 @@ import com.wuhan.gallery.bean.HostDataBean;
 import com.wuhan.gallery.bean.ImageBean;
 import com.wuhan.gallery.bean.NetworkDataBean;
 
+import java.nio.channels.NetworkChannel;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -16,7 +17,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ImageServer {
-
     //获取首页图片
     @GET("execute/clicktopload")
     Observable<NetworkDataBean<HostDataBean>> clicktopload(@Query("id") int id);
@@ -55,4 +55,9 @@ public interface ImageServer {
     //上传图片的操作
     @POST("addImages")
     Observable<NetworkDataBean<Boolean>> uploadImage(@Body RequestBody body);
+
+    //清空记录
+    @FormUrlEncoded
+    @POST("execute/deleteall")
+    Observable<NetworkDataBean<Boolean>> clearTrace(@Field("userid") int userId, @Field("status") int status);
 }

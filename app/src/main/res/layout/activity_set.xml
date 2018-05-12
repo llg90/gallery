@@ -14,8 +14,7 @@
             android:id="@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/back_b"
-            android:contentDescription="@string/empty"/>
+            android:src="@mipmap/back_b"/>
 
         <TextView
             android:layout_width="wrap_content"
