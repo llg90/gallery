@@ -4,7 +4,6 @@ import com.wuhan.gallery.bean.HostDataBean;
 import com.wuhan.gallery.bean.ImageBean;
 import com.wuhan.gallery.bean.NetworkDataBean;
 
-import java.nio.channels.NetworkChannel;
 import java.util.List;
 
 import io.reactivex.Observable;

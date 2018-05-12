@@ -1,10 +1,5 @@
 package com.wuhan.gallery.constant;
 
-import android.support.annotation.StringDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 public enum ImageStatusEnum {
     BROWSE(1, "浏览"),COLLECTION(2, "收藏"),CLICK(3, "点赞");
 

@@ -11,11 +11,12 @@ import android.view.ViewGroup;
 
 public abstract class BaseLazyLoadFragment extends BaseFragment {
     protected boolean isVisible = false;    //当前Fragment是否可见
-    private boolean isInitView = false;     //是否与View建立起映射关系
+    private boolean isPrepared = false;     //是否与View已经建立起映射关系
     private boolean isFirst = true; //用是否是第一次加载数据
 
     private View mContentView;
 
+    //设定可见/不可见的状态
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser){
@@ -36,15 +37,15 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
             mContentView = inflater.inflate(getLayoutId(), container, false);
         }
         initView(mContentView);
-        isInitView = true;
+        isPrepared = true;
         lazyLoadData();
         return mContentView;
     }
 
     protected void lazyLoadData() {
-        if (!isInitView || !isVisible || !isFirst) {
+        if (!isPrepared || !isVisible || !isFirst) {
             return;
-        }
+        }//已经加载布局文件、可见、第一次加载数据
         getData();                  //完成第一次加载
         isFirst = false;
     }

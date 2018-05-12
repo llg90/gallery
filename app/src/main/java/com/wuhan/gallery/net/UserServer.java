@@ -46,6 +46,4 @@ public interface UserServer {
     Observable<NetworkDataBean<UserBean>> pwdUpdate( @Field("username") String name,
                                                      @Field("password") String password,
                                                      @Field("newpassword") String newpassword);
-
-    
 }
