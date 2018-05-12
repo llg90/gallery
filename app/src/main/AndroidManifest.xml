@@ -46,7 +46,7 @@
         <activity android:name=".view.my.SetActivity"/>
         <activity android:name=".view.my.info.UserInfoActivity"/>
         <activity android:name=".view.my.info.ModifyInfoItemActivity"/>
-        <activity android:name=".view.my.login.ModifyPasswordActivity"/>
+        <activity android:name=".view.my.info.ModifyPasswordActivity"/>
 
     </application>
 

@@ -39,5 +39,13 @@ public interface UserServer {
                                                      @Field("username") String name,
                                                      @Field("telephone") String phone,
                                                      @Field("email") String email);
+
+    //更新用户信息
+    @FormUrlEncoded
+    @POST("user/updatepassword")
+    Observable<NetworkDataBean<UserBean>> pwdUpdate( @Field("username") String name,
+                                                     @Field("password") String password,
+                                                     @Field("newpassword") String newpassword);
+
     
 }

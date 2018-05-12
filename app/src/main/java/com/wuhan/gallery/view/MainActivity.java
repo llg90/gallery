@@ -93,16 +93,13 @@ public class MainActivity extends BaseFragmentActivity {
                             if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
                                 UserBean data = userBeanNetworkDataBean.getData();
                                 GalleryApplication.setUserBean(data);
-                            } else {
-                                Toast.makeText(MainActivity.this, userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
                             }
+//                            else {
+//                                Toast.makeText(MainActivity.this, userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
                         }
                     });
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

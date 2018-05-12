@@ -27,7 +27,6 @@ public class LoginActivity extends BaseActivity {
     private EditText mUserNameEt;
     private EditText mPasswordEt;
 
-
     private LoadingDialog mLoadingDialog;
 
     @Override
@@ -95,15 +94,15 @@ public class LoginActivity extends BaseActivity {
                     .subscribe(new NetObserver<NetworkDataBean<UserBean>>(mLoadingDialog) {
                         @Override
                         public void onNext(NetworkDataBean<UserBean> userBeanNetworkDataBean) {
-                        if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
-                            UserBean data = userBeanNetworkDataBean.getData();
-                            GalleryApplication.getContext().setUserBean(data);
-                            startActivity(new Intent(
-                                    LoginActivity.this, MainActivity.class));
-                        } else {
-                            Toast.makeText(LoginActivity.this,
-                                    userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                            if (userBeanNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
+                                UserBean data = userBeanNetworkDataBean.getData();
+                                GalleryApplication.getContext().setUserBean(data);
+                                startActivity(new Intent(
+                                        LoginActivity.this, MainActivity.class));
+                            } else {
+                                Toast.makeText(LoginActivity.this,
+                                        userBeanNetworkDataBean.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
         }
