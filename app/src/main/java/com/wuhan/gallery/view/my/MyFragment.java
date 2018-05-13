@@ -252,38 +252,6 @@ public class MyFragment extends BaseLazyLoadFragment {
             }
         });
 
-//        SingletonNetServer.INSTANCE.getImageServer().getImageBrowse(id, ImageStatusEnum.BROWSE.getValue())
-//                .compose(this.<NetworkDataBean<List<ImageBean>>>bindToLifecycle())
-//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new NetObserver<NetworkDataBean<List<ImageBean>>>() {
-//                    @Override
-//                    public void onNext(NetworkDataBean<List<ImageBean>> listNetworkDataBean) {
-//                        if (listNetworkDataBean.getStatus().equals(SingletonNetServer.SUCCESS)) {
-//                            List<ImageBean> myData = listNetworkDataBean.getData();
-//                            mRecordImageBeans.clear();
-//                            if (myData != null && !myData.isEmpty()){
-//                                String time = myData.get(0).getAddtime();
-//                                int position = 1;
-//                                mRecordImageBeans.add(new RecordImageBean(0,time, null));
-//                                mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
-//                                for (ImageBean item:myData) {
-//                                    if (item.getAddtime().equals(time)) {
-//                                        mRecordImageBeans.get(position).getUrls().add(item);
-//                                    } else {
-//                                        time = item.getAddtime();
-//                                        mRecordImageBeans.add(new RecordImageBean(0,time, null));
-//                                        mRecordImageBeans.add(new RecordImageBean(1,null, new ArrayList<ImageBean>()));
-//                                        position += 2;
-//                                        mRecordImageBeans.get(position).getUrls().add(item);
-//                                    }
-//                                }
-//                            }
-//                            mRecordImageRecyclerAdapter.notifyDataSetChanged();
-//                        }
-//                    }
-//                });
-
-
         //清空收藏记录
         mCollectClearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
